@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-04-28
+
+- AI Assist now drives your installed Claude and Codex CLIs directly — fewer moving parts, more reliable responses
+
 ## [1.14.0] - 2026-04-03
 
 - Add Hermes as a tool source
