@@ -25,6 +25,7 @@
 		5A3580B4B7E9BCBC0801B096 /* ClaudeCLIAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A790BF6E4978D4BAC6ACCF /* ClaudeCLIAgent.swift */; };
 		5B81DED237A60776ADB04134 /* RemoteServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3314080A44DEB895223E36D5 /* RemoteServer.swift */; };
 		60A6711BAB0C3B8A3ACBF985 /* SkillParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155D141EF812A3FE9ADF59C /* SkillParser.swift */; };
+		648FAE1AD9C0589BECECC8CB /* SkillPluginOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D59940D6F3CE4003ED9B7F /* SkillPluginOriginTests.swift */; };
 		6A8E0927D95BB14C9F377F4E /* SkillScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A5B26D335C1AFB6CDE8207 /* SkillScanner.swift */; };
 		6E02BA7498763274DD403CD0 /* DiffReviewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B955C8B935BD62ED4811FCA2 /* DiffReviewPanel.swift */; };
 		71E92A838AB4D1D6DC6174AF /* NewSkillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02A00F80E4712872205EA7B /* NewSkillSheet.swift */; };
@@ -32,11 +33,13 @@
 		791AA125E9170DBA81BCBE62 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 704A14702546BFBD29BE27A8 /* Highlightr */; };
 		7A17C99C5EFAE3AA9E788D50 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AFE1AF02B0F8057791C2A9 /* Collection.swift */; };
 		7EC6156934D559226BC78859 /* CollectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA102A49ACFB23BC15794F8 /* CollectionListView.swift */; };
+		7EEB581F248352B4D15CF159 /* AgentTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0377DFEA592B9CFECCCEE0F3 /* AgentTypesTests.swift */; };
 		7FD1DE6640F9339D5E97E09A /* MDCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F680B33C74A38FCF5ADD5 /* MDCParser.swift */; };
 		801A39D725B59A2F2BAF5DF2 /* cmark in Frameworks */ = {isa = PBXBuildFile; productRef = 9F4BE66CFE1E8401894FEF1F /* cmark */; };
 		82A3B6608A09239EE8F4C7C9 /* AgentConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C7BFA21B0740FF884FA01F /* AgentConfiguration.swift */; };
 		846B58F3B105D1734DC6FA75 /* SkillRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC9D3E83D8640CC258CF361 /* SkillRegistry.swift */; };
 		87A469B631CC80C89B14B1C7 /* SkillMetadataBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C812515FD8DC222B89745F2 /* SkillMetadataBar.swift */; };
+		8A79338409FBFF22A6267407 /* OneShotResponseParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60020771472734209832C3BC /* OneShotResponseParserTests.swift */; };
 		91EA572FCA75A2EA848C3429 /* ChopsTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A58EBE34E8A678FC897DFCB /* ChopsTextView.swift */; };
 		95163AEB7980654C901EC693 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6ED655F951177D2152351 /* Skill.swift */; };
 		98434D3DDFEEC7239F6F7B79 /* RegistrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD6C2A8BE68F553A9CA392 /* RegistrySheet.swift */; };
@@ -55,6 +58,7 @@
 		C2A028F40A1C665D29495DB6 /* StoreBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D23D43EC788E51ED1C265FE /* StoreBootstrap.swift */; };
 		C30BEAE03E54BD36F257A925 /* ToolFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5774429CCE83C2AFBE046C /* ToolFilterView.swift */; };
 		C6CFF37CC0B155E8846344A4 /* ChopsIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 04C3C644B72DD508A7CBC403 /* ChopsIcon.icon */; };
+		C7E9572C9C26D5B3165566C9 /* SkillParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */; };
 		CBD8FECF1C5A453C8B021665 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C77C5B30E6C885B39444E5B /* FrontmatterParser.swift */; };
 		CCD92CB102DFA0965D6AFDB5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF7822031FD82A28978D9C5 /* SidebarView.swift */; };
 		CECE9BEEC1D933C543B66A4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17F7FE50C96124BA4EE43A6F /* Assets.xcassets */; };
@@ -64,20 +68,35 @@
 		E6F4E1CF50F2F78F5BA9BAC9 /* SkillPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E332B9970E6E3D00DCFBA3 /* SkillPreviewView.swift */; };
 		E7ED248D6F94C1B1DEF1E8BA /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372FA72F2C179B79470DF86A /* MarkdownRenderer.swift */; };
 		E98F7490B18A194F82ED2C0E /* SkillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA64A368BBF950CD36C4F495 /* SkillListView.swift */; };
+		F3C287FC674757B173CFA164 /* FrontmatterParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */; };
 		F54A42D63F72E619FB051F9D /* AgentLogViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C32D91C01AA0A0D63D00ED /* AgentLogViewer.swift */; };
 		F6EBFD8F2B9E42AF8E156946 /* AgentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D7755BBA1F48D7E3F2ACE /* AgentTypes.swift */; };
 		F98B1E8579B139FD2A801650 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC47BDE92105F4736B379F /* SearchService.swift */; };
+		FA0BF32541AC568B488FAA79 /* ToolSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EF4978934812160BD71201 /* ToolSourceTests.swift */; };
 		FB295303DD30AED03290C726 /* SkillEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4DB87833D5160A11E39C9 /* SkillEditorView.swift */; };
 		FD8D2544AE423F4AB2843C0F /* AgentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907E59B064AB8366B60BF611 /* AgentTarget.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D8D7F1B30F8DD06CF6A42ECB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0BF6016099FDE9BFD3432654 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9188DE9415462C6D3B3FA067;
+			remoteInfo = Chops;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		02EF85EE8B243A6EBF7BC0EA /* AgentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentFactory.swift; sourceTree = "<group>"; };
+		0377DFEA592B9CFECCCEE0F3 /* AgentTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentTypesTests.swift; sourceTree = "<group>"; };
 		03AA4FA049E1DADB40552060 /* LibrarySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySettingsView.swift; sourceTree = "<group>"; };
 		04C3C644B72DD508A7CBC403 /* ChopsIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = ChopsIcon.icon; sourceTree = "<group>"; };
+		0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParserTests.swift; sourceTree = "<group>"; };
 		125B3A8A0094D3BF9E068E75 /* ActivityRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRow.swift; sourceTree = "<group>"; };
 		12C5CD1627D4EFF58AEF4F71 /* TemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateManager.swift; sourceTree = "<group>"; };
 		135976FA0E8358E099157DE1 /* MarkdownSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownSyntaxHighlighter.swift; sourceTree = "<group>"; };
+		14D59940D6F3CE4003ED9B7F /* SkillPluginOriginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPluginOriginTests.swift; sourceTree = "<group>"; };
 		168E103488DEA623E712852B /* SkillDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillDetailView.swift; sourceTree = "<group>"; };
 		17F7FE50C96124BA4EE43A6F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		231C267216AF1BCA8628B667 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -92,13 +111,16 @@
 		3314080A44DEB895223E36D5 /* RemoteServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServer.swift; sourceTree = "<group>"; };
 		372FA72F2C179B79470DF86A /* MarkdownRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
 		3A4F680B33C74A38FCF5ADD5 /* MDCParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDCParser.swift; sourceTree = "<group>"; };
+		3B1E367B7ADB2972827F12BD /* ChopsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChopsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C6B997C722E5E4F3ECE3877 /* WizardTemplateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardTemplateType.swift; sourceTree = "<group>"; };
 		3CD5E41FB46E550A2F56E881 /* CodexCLIAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexCLIAgent.swift; sourceTree = "<group>"; };
 		3D23D43EC788E51ED1C265FE /* StoreBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreBootstrap.swift; sourceTree = "<group>"; };
+		424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillParserTests.swift; sourceTree = "<group>"; };
 		4CA102A49ACFB23BC15794F8 /* CollectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionListView.swift; sourceTree = "<group>"; };
 		5155D141EF812A3FE9ADF59C /* SkillParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillParser.swift; sourceTree = "<group>"; };
 		5487D9027B97F7E9EE9A1F4A /* ToolSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSource.swift; sourceTree = "<group>"; };
 		5CAA9B98C7A69F32C6950710 /* ComposeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeModel.swift; sourceTree = "<group>"; };
+		60020771472734209832C3BC /* OneShotResponseParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneShotResponseParserTests.swift; sourceTree = "<group>"; };
 		60E0F71982C4AF0045962380 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		62DAB83F8E24DF7E0BB19F76 /* OneShotResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneShotResponseParser.swift; sourceTree = "<group>"; };
 		6797D4AC1970DB9ACB5ACA73 /* SSHService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHService.swift; sourceTree = "<group>"; };
@@ -112,6 +134,7 @@
 		92E8381274A1590717831053 /* AgentLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentLogger.swift; sourceTree = "<group>"; };
 		937F83BF3496CB231C535608 /* ComposePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposePanel.swift; sourceTree = "<group>"; };
 		947EAED7376B7762A373EF08 /* MarkdownMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownMessageView.swift; sourceTree = "<group>"; };
+		98EF4978934812160BD71201 /* ToolSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSourceTests.swift; sourceTree = "<group>"; };
 		9A5774429CCE83C2AFBE046C /* ToolFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolFilterView.swift; sourceTree = "<group>"; };
 		9FC9D3E83D8640CC258CF361 /* SkillRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillRegistry.swift; sourceTree = "<group>"; };
 		A5F5183DD7FC1EAA9E46940E /* AgentSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentSettingsView.swift; sourceTree = "<group>"; };
@@ -162,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				198DFCB0614727F57F6D073D /* Chops */,
+				9FFED64B3565157C89D21808 /* ChopsTests */,
 				D3558033A0A7B4EE7E7234CE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -310,6 +334,19 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
+		9FFED64B3565157C89D21808 /* ChopsTests */ = {
+			isa = PBXGroup;
+			children = (
+				0377DFEA592B9CFECCCEE0F3 /* AgentTypesTests.swift */,
+				0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */,
+				60020771472734209832C3BC /* OneShotResponseParserTests.swift */,
+				424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */,
+				14D59940D6F3CE4003ED9B7F /* SkillPluginOriginTests.swift */,
+				98EF4978934812160BD71201 /* ToolSourceTests.swift */,
+			);
+			path = ChopsTests;
+			sourceTree = "<group>";
+		};
 		D17AEFDEFE1C95D34F0F5771 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				B3F5CF5BB1FC8455FDDB004A /* Chops.app */,
+				3B1E367B7ADB2972827F12BD /* ChopsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -337,6 +375,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2CEE9C4FBE3074988BC6056B /* ChopsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D44F3C0273AA77B4910C933E /* Build configuration list for PBXNativeTarget "ChopsTests" */;
+			buildPhases = (
+				86C55941CF6F221B5D92AE4C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2392CE17C324C42FFFD0D7CA /* PBXTargetDependency */,
+			);
+			name = ChopsTests;
+			packageProductDependencies = (
+			);
+			productName = ChopsTests;
+			productReference = 3B1E367B7ADB2972827F12BD /* ChopsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9188DE9415462C6D3B3FA067 /* Chops */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 19BD727EBF8BFE5016E97A7A /* Build configuration list for PBXNativeTarget "Chops" */;
@@ -390,6 +446,7 @@
 			projectRoot = "";
 			targets = (
 				9188DE9415462C6D3B3FA067 /* Chops */,
+				2CEE9C4FBE3074988BC6056B /* ChopsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -471,7 +528,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		86C55941CF6F221B5D92AE4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EEB581F248352B4D15CF159 /* AgentTypesTests.swift in Sources */,
+				F3C287FC674757B173CFA164 /* FrontmatterParserTests.swift in Sources */,
+				8A79338409FBFF22A6267407 /* OneShotResponseParserTests.swift in Sources */,
+				C7E9572C9C26D5B3165566C9 /* SkillParserTests.swift in Sources */,
+				648FAE1AD9C0589BECECC8CB /* SkillPluginOriginTests.swift in Sources */,
+				FA0BF32541AC568B488FAA79 /* ToolSourceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2392CE17C324C42FFFD0D7CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9188DE9415462C6D3B3FA067 /* Chops */;
+			targetProxy = D8D7F1B30F8DD06CF6A42ECB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		31FDAD4740108C316B09117A /* Release */ = {
@@ -574,6 +652,26 @@
 			};
 			name = Debug;
 		};
+		5876BF42126F12919FB0DD2E /* LocalRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joshpigford.ChopsTests;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chops.app/Contents/MacOS/Chops";
+			};
+			name = LocalRelease;
+		};
 		58C6E63A67ADDC4C7CB7ED9D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -660,6 +758,26 @@
 			};
 			name = Debug;
 		};
+		8FCBCDF9BDEB067A6E645FCE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joshpigford.ChopsTests;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chops.app/Contents/MacOS/Chops";
+			};
+			name = Release;
+		};
 		9095D323E2CCDA0C5D19CDAE /* LocalRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -716,6 +834,26 @@
 			};
 			name = LocalRelease;
 		};
+		BE44E71ABAECE8EB8DF0FC80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joshpigford.ChopsTests;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chops.app/Contents/MacOS/Chops";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -735,6 +873,16 @@
 				67CFFB04E52F4383BF75357C /* Debug */,
 				9095D323E2CCDA0C5D19CDAE /* LocalRelease */,
 				31FDAD4740108C316B09117A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D44F3C0273AA77B4910C933E /* Build configuration list for PBXNativeTarget "ChopsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE44E71ABAECE8EB8DF0FC80 /* Debug */,
+				5876BF42126F12919FB0DD2E /* LocalRelease */,
+				8FCBCDF9BDEB067A6E645FCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

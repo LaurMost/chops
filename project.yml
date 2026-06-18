@@ -53,3 +53,19 @@ targets:
           CODE_SIGN_IDENTITY: "Developer ID Application"
         LocalRelease:
           CODE_SIGN_ENTITLEMENTS: Chops/ChopsLocalRelease.entitlements
+
+  ChopsTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ChopsTests
+    dependencies:
+      - target: Chops
+    settings:
+      base:
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+        SWIFT_VERSION: "5.9"
+        SWIFT_STRICT_CONCURRENCY: minimal
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Chops.app/Contents/MacOS/Chops
+        BUNDLE_LOADER: $(TEST_HOST)
