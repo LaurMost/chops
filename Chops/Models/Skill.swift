@@ -46,6 +46,50 @@ extension Skill {
         isPlugin || isBundledOpenClawSkill
     }
 
+    // MARK: - Plugin origin
+
+    /// The marketplace-distributed plugin package this skill belongs to — the
+    /// second path component of the synthetic plugin `resolvedPath`
+    /// (e.g. `everything-claude-code`). `nil` for non-plugin skills and plugin
+    /// skills whose `resolvedPath` is not a parseable synthetic identity.
+    var pluginPackage: String? {
+        pluginIdentity?.package
+    }
+
+    /// The publisher / namespace / marketplace a plugin package sits under — the
+    /// first path component of the synthetic plugin `resolvedPath`. `nil` for
+    /// non-plugin skills and for remote plugins, which have no enclosing publisher.
+    var pluginPublisher: String? {
+        pluginIdentity?.publisher
+    }
+
+    /// Parses the synthetic plugin `resolvedPath` into its publisher and package
+    /// components. Mirrors the scheme built in `SkillScanner.canonicalResolvedPath`.
+    private var pluginIdentity: (publisher: String?, package: String)? {
+        func components(after prefix: String) -> [String]? {
+            guard resolvedPath.hasPrefix(prefix) else { return nil }
+            return resolvedPath.dropFirst(prefix.count).split(separator: "/").map(String.init)
+        }
+
+        // claude-plugin:<publisher>/<plugin>/<skill>
+        // cursor-plugin:<publisher>/<plugin>/<skill>
+        // codex-plugin:<namespace>/<plugin>/<skill>
+        // claude-desktop:cowork_plugins/<marketplace>/<plugin>/<skill>
+        for prefix in ["claude-plugin:", "cursor-plugin:", "codex-plugin:", "claude-desktop:cowork_plugins/"] {
+            if let parts = components(after: prefix), parts.count >= 2 {
+                return (parts[0], parts[1])
+            }
+        }
+
+        // claude-desktop:remote_cowork_plugins/<plugin-id>/<skill> — the plugin id
+        // is itself the package; there is no enclosing publisher.
+        if let parts = components(after: "claude-desktop:remote_cowork_plugins/"), let pluginId = parts.first {
+            return (nil, pluginId)
+        }
+
+        return nil
+    }
+
     // MARK: - Computed
 
     var itemKind: ItemKind {

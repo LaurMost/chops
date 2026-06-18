@@ -19,6 +19,7 @@ enum SidebarFilter: Hashable {
     case allRules
     case favorites
     case tool(ToolSource)
+    case plugins(ToolSource)
     case collection(String)
     case server(String)
 }

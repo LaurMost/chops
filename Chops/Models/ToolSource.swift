@@ -279,6 +279,16 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    /// The tool sources whose plugin skills are surfaced under this tool's Plugins
+    /// row. The Claude toggle governs both Claude Code and Claude Desktop/Cowork
+    /// plugin caches, so they share a single row.
+    var pluginGroupSources: [ToolSource] {
+        switch self {
+        case .claude: [.claude, .claudeDesktop]
+        default: [self]
+        }
+    }
+
     private static func appBundleExists(_ name: String) -> Bool {
         let fm = FileManager.default
         let home = fm.homeDirectoryForCurrentUser.path

@@ -33,17 +33,21 @@ struct SkillListView: View {
 
         switch appState.sidebarFilter {
         case .allSkills:
-            result = result.filter { $0.itemKind == .skill }
+            result = result.filter { $0.itemKind == .skill && !$0.isPlugin }
         case .allAgents:
-            result = result.filter { $0.itemKind == .agent }
+            result = result.filter { $0.itemKind == .agent && !$0.isPlugin }
         case .allRules:
-            result = result.filter { $0.itemKind == .rule }
+            result = result.filter { $0.itemKind == .rule && !$0.isPlugin }
         case .favorites:
             result = result.filter { $0.isFavorite }
         case .tool(let tool):
-            result = result.filter { $0.toolSources.contains(tool) }
+            result = result.filter { !$0.isPlugin && $0.toolSources.contains(tool) }
             if let kind = appState.toolKindFilter {
                 result = result.filter { $0.itemKind == kind }
+            }
+        case .plugins(let tool):
+            result = result.filter { skill in
+                skill.isPlugin && skill.toolSources.contains(where: tool.pluginGroupSources.contains)
             }
         case .collection(let collName):
             result = result.filter { skill in
@@ -71,6 +75,7 @@ struct SkillListView: View {
         case .allRules: "Rules"
         case .favorites: "Favorites"
         case .tool(let tool): tool.displayName
+        case .plugins(let tool): "\(tool.displayName) Plugins"
         case .collection(let name): name
         case .server(let id):
             allSkills.first(where: { $0.remoteServer?.id == id })?.remoteServer?.label ?? "Remote"
@@ -108,6 +113,9 @@ struct SkillListView: View {
             case .allRules:
                 ContentUnavailableView("No Rules", systemImage: "list.bullet.rectangle",
                     description: Text("No rules match the current filter."))
+            case .plugins:
+                ContentUnavailableView("No Plugin Skills", systemImage: "puzzlepiece.extension",
+                    description: Text("No plugin skills match the current filter."))
             default:
                 ContentUnavailableView("No Skills", systemImage: "doc.text",
                     description: Text("No skills match the current filter."))
@@ -307,6 +315,14 @@ struct SkillRow: View {
     let skill: Skill
     var showTypeBadge: Bool = false
 
+    /// Tooltip for the plugin origin chip: publisher/namespace + full package identity.
+    private func pluginChipTooltip(package: String) -> String {
+        if let publisher = skill.pluginPublisher {
+            return "\(publisher) / \(package)"
+        }
+        return package
+    }
+
     var body: some View {
         HStack(spacing: 6) {
             if showTypeBadge {
@@ -322,6 +338,7 @@ struct SkillRow: View {
 
             Text(skill.name)
                 .lineLimit(1)
+                .layoutPriority(1)
 
             if skill.isFavorite {
                 Image(systemName: "star.fill")
@@ -330,6 +347,26 @@ struct SkillRow: View {
             }
 
             Spacer()
+
+            if let package = skill.pluginPackage {
+                Text(package)
+                    .font(.caption2)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .frame(maxWidth: 110)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(.quaternary, in: Capsule())
+                    .foregroundStyle(.secondary)
+                    .help(pluginChipTooltip(package: package))
+            }
+
+            if skill.isReadOnly {
+                Image(systemName: "lock.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .help("Read-only")
+            }
 
             if skill.isRemote, let serverLabel = skill.remoteServer?.label {
                 Text(serverLabel)
