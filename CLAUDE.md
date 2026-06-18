@@ -69,3 +69,17 @@ SwiftData store path is explicit: `~/Library/Application Support/Chops/Chops.sto
 ## Website
 
 Marketing site lives in `site/` — Astro 6, built with `npm run build` from that directory. Appcast XML is in `site/public/appcast.xml`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs live in GitHub Issues on [Shpigford/chops](https://github.com/Shpigford/chops); use the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical roles with default label names (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

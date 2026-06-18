@@ -132,7 +132,7 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .augment: return ["\(home)/.augment/skills"]
         case .claude: return ["\(home)/.claude/skills"]
-        case .cursor: return ["\(home)/.cursor/skills"]
+        case .cursor: return ["\(home)/.cursor/skills", "\(home)/.cursor/skills-cursor"]
         case .windsurf: return []
         case .codex: return ["\(home)/.codex/skills"]
         case .copilot: return ["\(home)/.copilot/skills"]
@@ -187,6 +187,7 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         switch self {
         case .cursor: return ["\(home)/.cursor/rules"]
+        case .codex: return ["\(home)/.codex/rules"]
         case .windsurf: return ["\(home)/.codeium/windsurf/memories", "\(home)/.windsurf/rules"]
         default: return []
         }
@@ -212,7 +213,8 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
             return fm.fileExists(atPath: "/Applications/Windsurf.app")
                 || fm.fileExists(atPath: "\(home)/.codeium/windsurf/argv.json")
         case .codex:
-            return fm.fileExists(atPath: "\(home)/.codex/config.toml")
+            return Self.appBundleExists("Codex")
+                || fm.fileExists(atPath: "\(home)/.codex/config.toml")
                 || fm.fileExists(atPath: "\(home)/.codex/auth.json")
                 || Self.cliBinaryExists("codex")
         case .amp:
@@ -283,14 +285,36 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
             "\(home)/.local/bin/\(name)",
             "/opt/homebrew/bin/\(name)",
             "/usr/local/bin/\(name)",
+            "\(home)/.volta/bin/\(name)",
         ])
         for path in paths where fm.isExecutableFile(atPath: path) {
             return URL(fileURLWithPath: path)
         }
+        // NVM: ~/.nvm/versions/node/<version>/bin/<name>
         let nvmDir = "\(home)/.nvm/versions/node"
         if let nodeDirs = try? fm.contentsOfDirectory(atPath: nvmDir) {
             for nodeDir in nodeDirs.sorted().reversed() {
                 let candidate = "\(nvmDir)/\(nodeDir)/bin/\(name)"
+                if fm.isExecutableFile(atPath: candidate) {
+                    return URL(fileURLWithPath: candidate)
+                }
+            }
+        }
+        // FNM: ~/.local/share/fnm/node-versions/<version>/installation/bin/<name>
+        let fnmDir = "\(home)/.local/share/fnm/node-versions"
+        if let nodeDirs = try? fm.contentsOfDirectory(atPath: fnmDir) {
+            for nodeDir in nodeDirs.sorted().reversed() {
+                let candidate = "\(fnmDir)/\(nodeDir)/installation/bin/\(name)"
+                if fm.isExecutableFile(atPath: candidate) {
+                    return URL(fileURLWithPath: candidate)
+                }
+            }
+        }
+        // mise: ~/.local/share/mise/installs/node/<version>/bin/<name>
+        let miseDir = "\(home)/.local/share/mise/installs/node"
+        if let nodeDirs = try? fm.contentsOfDirectory(atPath: miseDir) {
+            for nodeDir in nodeDirs.sorted().reversed() {
+                let candidate = "\(miseDir)/\(nodeDir)/bin/\(name)"
                 if fm.isExecutableFile(atPath: candidate) {
                     return URL(fileURLWithPath: candidate)
                 }
@@ -307,7 +331,10 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         case .claude:
             return Self.cliBinaryURL("claude")
         case .codex:
-            return Self.cliBinaryURL("codex", extraPaths: ["\(home)/.codex/bin/codex"])
+            return Self.cliBinaryURL("codex", extraPaths: [
+                "\(home)/.codex/bin/codex",
+                "/Applications/Codex.app/Contents/Resources/codex",
+            ])
         default:
             return nil
         }

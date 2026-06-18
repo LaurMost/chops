@@ -37,7 +37,9 @@ extension Skill {
     var isPlugin: Bool {
         filePath.contains("/.claude/plugins/") ||
         filePath.contains("/local-agent-mode-sessions/") ||
-        toolSources.contains(.claudeDesktop)
+        toolSources.contains(.claudeDesktop) ||
+        resolvedPath.hasPrefix("cursor-plugin:") ||
+        resolvedPath.hasPrefix("codex-plugin:")
     }
 
     var isReadOnly: Bool {
