@@ -16,9 +16,22 @@ struct ChopsSettings {
     static var sotAgentsDir: String { "\(sotDir)/agents" }
     static var sotRulesDir: String { "\(sotDir)/rules" }
 
-    /// When false (default), skills installed by CLI and Desktop plugins are excluded from the library.
-    static var includePluginSkills: Bool {
-        get { UserDefaults.standard.bool(forKey: "includePluginSkills") }
-        set { UserDefaults.standard.set(newValue, forKey: "includePluginSkills") }
+    /// Tools whose plugin caches Chops knows how to scan. The Claude toggle also
+    /// governs Claude Desktop/Cowork plugin skills.
+    static let pluginCapableTools: [ToolSource] = [.claude, .cursor, .codex]
+
+    /// UserDefaults key backing a single tool's plugin toggle.
+    static func pluginDefaultsKey(for tool: ToolSource) -> String {
+        "includePlugins.\(tool.rawValue)"
+    }
+
+    /// Whether plugin skills for a given tool should be scanned. Off by default.
+    static func includePlugins(for tool: ToolSource) -> Bool {
+        UserDefaults.standard.bool(forKey: pluginDefaultsKey(for: tool))
+    }
+
+    /// The set of tools with plugin scanning currently enabled.
+    static var enabledPluginTools: Set<ToolSource> {
+        Set(pluginCapableTools.filter { includePlugins(for: $0) })
     }
 }
