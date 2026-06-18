@@ -239,6 +239,50 @@ extension Skill {
             && !toolSources.contains(.agents)
     }
 
+    var installableTools: [ToolSource] {
+        ToolSource.allCases.filter {
+            $0.listable && !$0.globalPaths.isEmpty && !toolSources.contains($0)
+        }
+    }
+
+    func install(into tool: ToolSource) throws {
+        let fm = FileManager.default
+        guard let globalDir = tool.globalPaths.first else {
+            throw SkillInstallError.noGlobalPath(tool)
+        }
+        let canonicalDir = URL(fileURLWithPath: resolvedPath)
+            .deletingLastPathComponent()
+            .resolvingSymlinksInPath()
+            .path
+        let skillDirName = URL(fileURLWithPath: canonicalDir).lastPathComponent
+        let linkPath = "\(globalDir)/\(skillDirName)"
+        guard !fm.fileExists(atPath: linkPath) else {
+            throw SkillInstallError.alreadyInstalled(tool)
+        }
+        try fm.createDirectory(atPath: globalDir, withIntermediateDirectories: true)
+        try fm.createSymbolicLink(atPath: linkPath, withDestinationPath: canonicalDir)
+    }
+
+    func uninstall(from tool: ToolSource) throws {
+        let fm = FileManager.default
+        let canonicalDir = URL(fileURLWithPath: resolvedPath)
+            .deletingLastPathComponent()
+            .resolvingSymlinksInPath()
+            .path
+        let skillDirName = URL(fileURLWithPath: canonicalDir).lastPathComponent
+        for toolGlobalDir in tool.globalPaths {
+            let linkPath = "\(toolGlobalDir)/\(skillDirName)"
+            guard fm.fileExists(atPath: linkPath) else { continue }
+            let attrs = try fm.attributesOfItem(atPath: linkPath)
+            guard (attrs[.type] as? FileAttributeType) == .typeSymbolicLink else {
+                throw SkillInstallError.cannotRemoveCanonical
+            }
+            try fm.removeItem(atPath: linkPath)
+            return
+        }
+        throw SkillInstallError.notInstalled(tool)
+    }
+
     func makeGlobal() throws {
         let fm = FileManager.default
         let home = fm.homeDirectoryForCurrentUser.path
@@ -331,6 +375,26 @@ enum SkillDeletionError: LocalizedError {
             let home = FileManager.default.homeDirectoryForCurrentUser.path
             let displayPath = path.replacingOccurrences(of: home, with: "~")
             return "Couldn't delete \(displayPath). Check permissions and try again."
+        }
+    }
+}
+
+enum SkillInstallError: LocalizedError {
+    case noGlobalPath(ToolSource)
+    case alreadyInstalled(ToolSource)
+    case notInstalled(ToolSource)
+    case cannotRemoveCanonical
+
+    var errorDescription: String? {
+        switch self {
+        case .noGlobalPath(let tool):
+            return "\(tool.displayName) doesn't have a known global skills directory."
+        case .alreadyInstalled(let tool):
+            return "Skill is already installed in \(tool.displayName)."
+        case .notInstalled(let tool):
+            return "Skill is not installed in \(tool.displayName)."
+        case .cannotRemoveCanonical:
+            return "Cannot remove the original skill source — only installed symlinks can be removed."
         }
     }
 }
