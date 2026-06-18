@@ -120,6 +120,14 @@ final class SkillScanner {
             if ToolSource.claudeDesktop.isInstalled {
                 collectClaudeDesktopSkills(into: &results)
             }
+            // Cursor plugin cache
+            if ToolSource.cursor.isInstalled {
+                collectFromCursorPlugins(into: &results)
+            }
+            // Codex plugin cache
+            if ToolSource.codex.isInstalled {
+                collectFromCodexPlugins(into: &results)
+            }
         }
 
         for path in customPaths {
@@ -199,7 +207,7 @@ final class SkillScanner {
                     results.append(data)
                 }
             } else {
-                guard ["md", "mdc", "toml"].contains(item.pathExtension) else { continue }
+                guard ["md", "mdc", "toml", "rules"].contains(item.pathExtension) else { continue }
                 guard !shouldIgnoreLooseMarkdownFile(named: item.lastPathComponent) else { continue }
                 if let data = collectSkillData(
                     at: item,
@@ -271,7 +279,7 @@ final class SkillScanner {
                     // Hermes nests skills as ~/.hermes/skills/<category>/<skill>/SKILL.md (agentskills.io layout).
                     collectFromDirectory(item, toolSource: toolSource, isGlobal: isGlobal, kind: kind, into: &results)
                 }
-            } else if item.pathExtension == "md" || item.pathExtension == "mdc" || item.pathExtension == "toml" {
+            } else if ["md", "mdc", "toml", "rules"].contains(item.pathExtension) {
                 guard !shouldIgnoreLooseMarkdownFile(named: item.lastPathComponent) else { continue }
                 if let data = collectSkillData(at: item, toolSource: toolSource, isDirectory: false, isGlobal: isGlobal, kind: kind) {
                     results.append(data)
@@ -292,7 +300,7 @@ final class SkillScanner {
             var isDir: ObjCBool = false
             fm.fileExists(atPath: item.path, isDirectory: &isDir)
             guard !isDir.boolValue else { return false }
-            guard ["md", "mdc", "toml"].contains(item.pathExtension) else { return false }
+            guard ["md", "mdc", "toml", "rules"].contains(item.pathExtension) else { return false }
             return !shouldIgnoreLooseMarkdownFile(named: item.lastPathComponent)
         }
 
@@ -324,6 +332,24 @@ final class SkillScanner {
             return "claude-plugin:\(parts[0])/\(parts[1])/\(parts[4])"
         }
 
+        // Cursor plugins: .../.cursor/plugins/cache/<publisher>/<plugin>/<hash>/.cursor/skills/<skill>/SKILL.md
+        if toolSource == .cursor, let range = path.range(of: ".cursor/plugins/cache/") {
+            let after = String(path[range.upperBound...])
+            let parts = after.components(separatedBy: "/")
+            // parts: [publisher, plugin, hash, ".cursor", "skills", skill, "SKILL.md"]
+            guard parts.count >= 7, parts[3] == ".cursor", parts[4] == "skills" else { return resolved }
+            return "cursor-plugin:\(parts[0])/\(parts[1])/\(parts[5])"
+        }
+
+        // Codex plugins: .../.codex/plugins/cache/<namespace>/<plugin>/<version>/skills/<skill>/SKILL.md
+        if toolSource == .codex, let range = path.range(of: ".codex/plugins/cache/") {
+            let after = String(path[range.upperBound...])
+            let parts = after.components(separatedBy: "/")
+            // parts: [namespace, plugin, version, "skills", skill, "SKILL.md"]
+            guard parts.count >= 6, parts[3] == "skills" else { return resolved }
+            return "codex-plugin:\(parts[0])/\(parts[1])/\(parts[4])"
+        }
+
         guard toolSource == .claudeDesktop else { return resolved }
 
         // Local plugins: .../cowork_plugins/cache/<marketplace>/<plugin>/<version>/skills/<skill>/SKILL.md
@@ -348,7 +374,10 @@ final class SkillScanner {
     }
 
     private static func isSyntheticLocalResolvedPath(_ resolvedPath: String) -> Bool {
-        resolvedPath.hasPrefix("claude-plugin:") || resolvedPath.hasPrefix("claude-desktop:")
+        resolvedPath.hasPrefix("claude-plugin:") ||
+        resolvedPath.hasPrefix("claude-desktop:") ||
+        resolvedPath.hasPrefix("cursor-plugin:") ||
+        resolvedPath.hasPrefix("codex-plugin:")
     }
 
     /// Read and parse a single skill file. Pure I/O, no SwiftData.
@@ -411,6 +440,63 @@ final class SkillScanner {
                 guard let installPath = installation["installPath"] as? String else { continue }
                 let skillsDir = URL(fileURLWithPath: installPath).appendingPathComponent("skills")
                 collectFromDirectory(skillsDir, toolSource: .claude, isGlobal: true, into: &results)
+            }
+        }
+    }
+
+    /// Scan Cursor plugin cache: ~/.cursor/plugins/cache/{publisher}/{plugin}/{hash}/.cursor/skills/
+    private static func collectFromCursorPlugins(into results: inout [ScannedSkillData]) {
+        let fm = FileManager.default
+        let home = fm.homeDirectoryForCurrentUser.path
+        let cacheRoot = "\(home)/.cursor/plugins/cache"
+
+        guard let publishers = try? fm.contentsOfDirectory(atPath: cacheRoot) else { return }
+
+        for publisher in publishers {
+            guard !Task.isCancelled else { return }
+            let publisherPath = "\(cacheRoot)/\(publisher)"
+            guard let plugins = try? fm.contentsOfDirectory(atPath: publisherPath) else { continue }
+
+            for plugin in plugins {
+                guard !Task.isCancelled else { return }
+                let pluginPath = "\(publisherPath)/\(plugin)"
+                guard let hashes = try? fm.contentsOfDirectory(atPath: pluginPath) else { continue }
+
+                for hash in hashes {
+                    guard !Task.isCancelled else { return }
+                    let skillsDir = URL(fileURLWithPath: "\(pluginPath)/\(hash)/.cursor/skills")
+                    collectFromDirectory(skillsDir, toolSource: .cursor, isGlobal: true, into: &results)
+                }
+            }
+        }
+    }
+
+    /// Scan Codex plugin cache: ~/.codex/plugins/cache/{namespace}/{plugin}/{version}/skills/
+    /// Skips openai-primary-runtime (built-in Codex runtime capabilities, not user-facing skills).
+    private static func collectFromCodexPlugins(into results: inout [ScannedSkillData]) {
+        let fm = FileManager.default
+        let home = fm.homeDirectoryForCurrentUser.path
+        let cacheRoot = "\(home)/.codex/plugins/cache"
+
+        guard let namespaces = try? fm.contentsOfDirectory(atPath: cacheRoot) else { return }
+
+        for namespace in namespaces {
+            guard !Task.isCancelled else { return }
+            if namespace == "openai-primary-runtime" { continue }
+
+            let namespacePath = "\(cacheRoot)/\(namespace)"
+            guard let plugins = try? fm.contentsOfDirectory(atPath: namespacePath) else { continue }
+
+            for plugin in plugins {
+                guard !Task.isCancelled else { return }
+                let pluginPath = "\(namespacePath)/\(plugin)"
+                guard let versions = try? fm.contentsOfDirectory(atPath: pluginPath) else { continue }
+
+                for version in versions {
+                    guard !Task.isCancelled else { return }
+                    let skillsDir = URL(fileURLWithPath: "\(pluginPath)/\(version)/skills")
+                    collectFromDirectory(skillsDir, toolSource: .codex, isGlobal: true, into: &results)
+                }
             }
         }
     }
