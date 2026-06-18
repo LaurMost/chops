@@ -13,12 +13,25 @@ struct SidebarView: View {
     private var activeSources: [ToolSource] {
         ToolSource.allCases.filter { tool in
             guard tool.listable else { return false }
-            return allSkills.contains { $0.toolSources.contains(tool) }
+            return allSkills.contains { !$0.isPlugin && $0.toolSources.contains(tool) }
         }
     }
 
     private func toolCount(_ tool: ToolSource) -> Int {
-        allSkills.filter { $0.toolSources.contains(tool) }.count
+        allSkills.filter { !$0.isPlugin && $0.toolSources.contains(tool) }.count
+    }
+
+    /// Plugin-capable tools whose toggle is on and that currently yield plugin skills.
+    private var pluginTools: [ToolSource] {
+        ChopsSettings.pluginCapableTools.filter { tool in
+            ChopsSettings.includePlugins(for: tool) && pluginCount(tool) > 0
+        }
+    }
+
+    private func pluginCount(_ tool: ToolSource) -> Int {
+        allSkills.filter { skill in
+            skill.isPlugin && skill.toolSources.contains(where: tool.pluginGroupSources.contains)
+        }.count
     }
 
     var body: some View {
@@ -27,15 +40,15 @@ struct SidebarView: View {
         List(selection: $appState.sidebarFilter) {
             Section("Library") {
                 Label("Skills", systemImage: "doc.text")
-                    .badge(allSkills.filter { $0.itemKind == .skill }.count)
+                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .skill }.count)
                     .tag(SidebarFilter.allSkills)
 
                 Label("Agents", systemImage: "person.crop.rectangle")
-                    .badge(allSkills.filter { $0.itemKind == .agent }.count)
+                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .agent }.count)
                     .tag(SidebarFilter.allAgents)
 
                 Label("Rules", systemImage: "list.bullet.rectangle")
-                    .badge(allSkills.filter { $0.itemKind == .rule }.count)
+                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .rule }.count)
                     .tag(SidebarFilter.allRules)
 
                 Label("Favorites", systemImage: "star")
@@ -52,6 +65,20 @@ struct SidebarView: View {
                     }
                     .badge(toolCount(tool))
                     .tag(SidebarFilter.tool(tool))
+                }
+            }
+
+            if !pluginTools.isEmpty {
+                Section("Plugins") {
+                    ForEach(pluginTools) { tool in
+                        Label {
+                            Text(tool.displayName)
+                        } icon: {
+                            ToolIcon(tool: tool)
+                        }
+                        .badge(pluginCount(tool))
+                        .tag(SidebarFilter.plugins(tool))
+                    }
                 }
             }
 
