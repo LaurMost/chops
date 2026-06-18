@@ -17,7 +17,9 @@ struct ContentView: View {
         } content: {
             SkillListView()
         } detail: {
-            if let skill = appState.selectedSkill {
+            if appState.sidebarFilter == .toolsOverview {
+                ToolsOverviewView()
+            } else if let skill = appState.selectedSkill {
                 SkillDetailView(skill: skill)
             } else {
                 ContentUnavailableView(
