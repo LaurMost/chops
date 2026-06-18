@@ -32,6 +32,8 @@ struct SkillListView: View {
         var result = allSkills
 
         switch appState.sidebarFilter {
+        case .toolsOverview:
+            result = []
         case .allSkills:
             result = result.filter { $0.itemKind == .skill && !$0.isPlugin }
         case .allAgents:
@@ -70,6 +72,7 @@ struct SkillListView: View {
 
     private var title: String {
         switch appState.sidebarFilter {
+        case .toolsOverview: "All Tools"
         case .allSkills: "Skills"
         case .allAgents: "Agents"
         case .allRules: "Rules"
@@ -107,6 +110,8 @@ struct SkillListView: View {
             )
         } else {
             switch appState.sidebarFilter {
+            case .toolsOverview:
+                EmptyView()
             case .allAgents:
                 ContentUnavailableView("No Agents", systemImage: "person.crop.rectangle",
                                        description: Text("No agents match the current filter."))

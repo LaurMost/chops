@@ -75,6 +75,7 @@
 		F98B1E8579B139FD2A801650 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC47BDE92105F4736B379F /* SearchService.swift */; };
 		FA0BF32541AC568B488FAA79 /* ToolSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EF4978934812160BD71201 /* ToolSourceTests.swift */; };
 		FB295303DD30AED03290C726 /* SkillEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B4DB87833D5160A11E39C9 /* SkillEditorView.swift */; };
+		FC94C3557868FD90B546803F /* ToolsOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B012C7BA1116A0861E5274C5 /* ToolsOverviewView.swift */; };
 		FD8D2544AE423F4AB2843C0F /* AgentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907E59B064AB8366B60BF611 /* AgentTarget.swift */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,7 @@
 		A7B6AE242CAD6A285DD57079 /* ToolBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBadge.swift; sourceTree = "<group>"; };
 		A924245DDDA4C6A59BE15567 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA64A368BBF950CD36C4F495 /* SkillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillListView.swift; sourceTree = "<group>"; };
+		B012C7BA1116A0861E5274C5 /* ToolsOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsOverviewView.swift; sourceTree = "<group>"; };
 		B1F8AA042D5D8A9F92F35CA3 /* SchemaVersions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersions.swift; sourceTree = "<group>"; };
 		B3F5CF5BB1FC8455FDDB004A /* Chops.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chops.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B955C8B935BD62ED4811FCA2 /* DiffReviewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffReviewPanel.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				2CF7822031FD82A28978D9C5 /* SidebarView.swift */,
 				AA64A368BBF950CD36C4F495 /* SkillListView.swift */,
 				9A5774429CCE83C2AFBE046C /* ToolFilterView.swift */,
+				B012C7BA1116A0861E5274C5 /* ToolsOverviewView.swift */,
 			);
 			path = Sidebar;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				53C393C13E30EC439317509F /* ToolBadge.swift in Sources */,
 				C30BEAE03E54BD36F257A925 /* ToolFilterView.swift in Sources */,
 				BD584933CCE2B650345C4CF1 /* ToolSource.swift in Sources */,
+				FC94C3557868FD90B546803F /* ToolsOverviewView.swift in Sources */,
 				2958B4F28A2BA0D683550419 /* WizardTemplateType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
