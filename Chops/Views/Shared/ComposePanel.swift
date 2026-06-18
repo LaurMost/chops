@@ -50,15 +50,15 @@ struct ComposePanel: View {
         templateType: WizardTemplateType,
         onAccept: @escaping () -> Void = {}
     ) {
-        self._content = content
-        self._isVisible = isVisible
+        _content = content
+        _isVisible = isVisible
         self.skillName = skillName
         self.skillDescription = skillDescription
         self.frontmatter = frontmatter
         self.filePath = filePath
         self.workingDirectory = workingDirectory
         self.onAccept = onAccept
-        self._selectedTemplateType = State(initialValue: templateType)
+        _selectedTemplateType = State(initialValue: templateType)
     }
 
     private var configuredAgents: [AgentID] { AgentConfiguration.shared.enabledAgents }
@@ -715,7 +715,7 @@ struct ComposePanel: View {
             TextField(isFirstTurn ? "Enter instructions…" : "Follow up…", text: $inputText, axis: .vertical)
                 .font(.body)
                 .textFieldStyle(.plain)
-                .lineLimit(1...4)
+                .lineLimit(1 ... 4)
                 .disabled(isProcessing || !isConnected || hasPendingDiffs)
                 .onSubmit {
                     if !sendDisabled { sendMessage() }
@@ -859,7 +859,7 @@ struct ComposePanel: View {
     private func connect() {
         guard let agentId = selectedAgent, !isConnected, !isConnecting else { return }
         let client = AgentFactory.make(for: agentId)
-        agent = client  // agent's @Observable state drives the UI from this point
+        agent = client // agent's @Observable state drives the UI from this point
         let systemPrompt = TemplateManager.shared.systemPrompt(
             for: selectedTemplateType,
             skillName: skillName,
@@ -939,7 +939,7 @@ struct ComposePanel: View {
                         originalText: originalContent,
                         originalData: originalContent.data(using: .utf8),
                         existedBefore: true
-                    )
+                    ),
                 ],
                 fallbackOriginal: originalContent,
                 autoAccept: autoAccept
@@ -1088,7 +1088,7 @@ struct ComposePanel: View {
     }
 
     /// Restores a file to its pre-write state. If the file didn't exist before, removes it.
-    nonisolated private static func revertWrittenDiff(_ diff: ChatDiff) async throws {
+    private nonisolated static func revertWrittenDiff(_ diff: ChatDiff) async throws {
         try await Task.detached(priority: .userInitiated) {
             let url = URL(fileURLWithPath: diff.path)
             if diff.existedBefore {
@@ -1109,7 +1109,7 @@ struct ComposePanel: View {
         "\(messageId.uuidString)-\(diffIndex)"
     }
 
-    nonisolated private static func persistAcceptedDiff(_ diff: ChatDiff) async throws {
+    private nonisolated static func persistAcceptedDiff(_ diff: ChatDiff) async throws {
         try await Task.detached(priority: .userInitiated) {
             let url = URL(fileURLWithPath: diff.path)
             let parent = url.deletingLastPathComponent()

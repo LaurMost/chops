@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct CollectionListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -20,7 +20,7 @@ struct CollectionListView: View {
     private func hasDuplicateName(_ name: String, excluding collectionID: PersistentIdentifier? = nil) -> Bool {
         collections.contains { collection in
             collection.persistentModelID != collectionID &&
-            collection.name.localizedCaseInsensitiveCompare(name) == .orderedSame
+                collection.name.localizedCaseInsensitiveCompare(name) == .orderedSame
         }
     }
 
@@ -99,7 +99,7 @@ struct CollectionListView: View {
         "folder", "star", "bookmark", "tag", "tray",
         "archivebox", "doc.text", "gearshape", "wrench",
         "hammer", "paintbrush", "wand.and.stars", "terminal",
-        "network", "globe", "bolt", "flame", "leaf"
+        "network", "globe", "bolt", "flame", "leaf",
     ]
 
     var body: some View {
@@ -174,8 +174,8 @@ struct CollectionListView: View {
                                 .frame(width: 28, height: 28)
                                 .background(
                                     newCollectionIcon == icon ?
-                                    Color.accentColor.opacity(0.2) :
-                                    Color.clear,
+                                        Color.accentColor.opacity(0.2) :
+                                        Color.clear,
                                     in: RoundedRectangle(cornerRadius: 4)
                                 )
                         }
@@ -190,7 +190,7 @@ struct CollectionListView: View {
                     }
                     Spacer()
                     Button("Create", action: createCollection)
-                    .disabled(normalizedName(newCollectionName).isEmpty)
+                        .disabled(normalizedName(newCollectionName).isEmpty)
                 }
             }
             .padding()

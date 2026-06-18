@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SidebarView: View {
     @Environment(AppState.self) private var appState
@@ -18,7 +18,7 @@ struct SidebarView: View {
     }
 
     private func toolCount(_ tool: ToolSource) -> Int {
-        allSkills.filter { !$0.isPlugin && $0.toolSources.contains(tool) }.count
+        allSkills.count(where: { !$0.isPlugin && $0.toolSources.contains(tool) })
     }
 
     /// Plugin-capable tools whose toggle is on and that currently yield plugin skills.
@@ -29,9 +29,9 @@ struct SidebarView: View {
     }
 
     private func pluginCount(_ tool: ToolSource) -> Int {
-        allSkills.filter { skill in
+        allSkills.count(where: { skill in
             skill.isPlugin && skill.toolSources.contains(where: tool.pluginGroupSources.contains)
-        }.count
+        })
     }
 
     var body: some View {
@@ -40,15 +40,15 @@ struct SidebarView: View {
         List(selection: $appState.sidebarFilter) {
             Section("Library") {
                 Label("Skills", systemImage: "doc.text")
-                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .skill }.count)
+                    .badge(allSkills.count(where: { !$0.isPlugin && $0.itemKind == .skill }))
                     .tag(SidebarFilter.allSkills)
 
                 Label("Agents", systemImage: "person.crop.rectangle")
-                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .agent }.count)
+                    .badge(allSkills.count(where: { !$0.isPlugin && $0.itemKind == .agent }))
                     .tag(SidebarFilter.allAgents)
 
                 Label("Rules", systemImage: "list.bullet.rectangle")
-                    .badge(allSkills.filter { !$0.isPlugin && $0.itemKind == .rule }.count)
+                    .badge(allSkills.count(where: { !$0.isPlugin && $0.itemKind == .rule }))
                     .tag(SidebarFilter.allRules)
 
                 Label("Favorites", systemImage: "star")

@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SkillListView: View {
     private enum ActiveAlert: Identifiable {
@@ -39,7 +39,7 @@ struct SkillListView: View {
         case .allRules:
             result = result.filter { $0.itemKind == .rule && !$0.isPlugin }
         case .favorites:
-            result = result.filter { $0.isFavorite }
+            result = result.filter(\.isFavorite)
         case .tool(let tool):
             result = result.filter { !$0.isPlugin && $0.toolSources.contains(tool) }
             if let kind = appState.toolKindFilter {
@@ -60,8 +60,8 @@ struct SkillListView: View {
         if !appState.searchText.isEmpty {
             result = result.filter {
                 $0.name.localizedCaseInsensitiveContains(appState.searchText) ||
-                $0.skillDescription.localizedCaseInsensitiveContains(appState.searchText) ||
-                $0.content.localizedCaseInsensitiveContains(appState.searchText)
+                    $0.skillDescription.localizedCaseInsensitiveContains(appState.searchText) ||
+                    $0.content.localizedCaseInsensitiveContains(appState.searchText)
             }
         }
 
@@ -109,16 +109,16 @@ struct SkillListView: View {
             switch appState.sidebarFilter {
             case .allAgents:
                 ContentUnavailableView("No Agents", systemImage: "person.crop.rectangle",
-                    description: Text("No agents match the current filter."))
+                                       description: Text("No agents match the current filter."))
             case .allRules:
                 ContentUnavailableView("No Rules", systemImage: "list.bullet.rectangle",
-                    description: Text("No rules match the current filter."))
+                                       description: Text("No rules match the current filter."))
             case .plugins:
                 ContentUnavailableView("No Plugin Skills", systemImage: "puzzlepiece.extension",
-                    description: Text("No plugin skills match the current filter."))
+                                       description: Text("No plugin skills match the current filter."))
             default:
                 ContentUnavailableView("No Skills", systemImage: "doc.text",
-                    description: Text("No skills match the current filter."))
+                                       description: Text("No skills match the current filter."))
             }
         }
     }

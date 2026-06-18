@@ -1,7 +1,6 @@
 import AppKit
 
 final class ChopsTextView: NSTextView {
-
     // MARK: - Cursor
 
     override func mouseMoved(with event: NSEvent) {

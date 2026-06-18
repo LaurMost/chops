@@ -5,7 +5,7 @@ import Foundation
 /// One option presented to the user when an agent asks to use a tool.
 /// `kind` is a stable string used by the UI to color the button (e.g. `allow_once`,
 /// `allow_always`, `reject_once`, `reject_always`).
-struct PermissionOption: Codable, Sendable, Identifiable {
+struct PermissionOption: Codable, Identifiable {
     let kind: String
     let name: String
     let optionId: String
@@ -16,7 +16,7 @@ struct PermissionOption: Codable, Sendable, Identifiable {
 /// Optional diff payload attached to a permission ask. When present the UI shows the
 /// before/after content side-by-side so the user can review the proposed change before
 /// clicking Allow. Required for any tool that mutates disk (Write / Edit / MultiEdit).
-struct PermissionDiffPreview: Sendable {
+struct PermissionDiffPreview {
     let path: String
     let originalText: String?
     let proposedText: String
@@ -34,13 +34,14 @@ struct PermissionRequest: Identifiable, @unchecked Sendable {
 
 /// Result of a permission ask. `cancelled == true` means the user dismissed without choosing
 /// a specific option; otherwise `optionId` identifies the chosen option.
-struct PermissionResponse: Sendable {
+struct PermissionResponse {
     let optionId: String?
     let cancelled: Bool
 
     static func choice(_ optionId: String) -> PermissionResponse {
         PermissionResponse(optionId: optionId, cancelled: false)
     }
+
     static var cancelled: PermissionResponse {
         PermissionResponse(optionId: nil, cancelled: true)
     }
@@ -52,30 +53,31 @@ struct PermissionResponse: Sendable {
 /// to give the user real-time visibility into what the agent is doing — Claude
 /// generating long tool inputs can take minutes; without an activity feed it looks like
 /// the app is frozen.
-struct AgentActivity: Identifiable, Sendable, Equatable {
-    enum Kind: Sendable, Equatable {
+struct AgentActivity: Identifiable, Equatable {
+    enum Kind: Equatable {
         case thinking
         case toolCall(name: String)
         case toolInputDraft(name: String, charCount: Int)
         case toolResult(name: String)
         case info
     }
-    enum Status: Sendable, Equatable {
+
+    enum Status: Equatable {
         case running
-        case done       // tool ran successfully (read-only / non-mutating)
-        case applied    // mutating tool (Write/Edit/MultiEdit) successfully changed disk
+        case done // tool ran successfully (read-only / non-mutating)
+        case applied // mutating tool (Write/Edit/MultiEdit) successfully changed disk
         case failed
     }
 
     /// Optional rich payload so the UI can show what each step actually did when
     /// expanded. For Write/Edit this carries the diff; for Read/Bash the raw input/output.
-    struct Payload: Sendable, Equatable {
+    struct Payload: Equatable {
         var filePath: String?
         var originalText: String?
         var proposedText: String?
         var existedBefore: Bool?
-        var rawInput: String?      // pretty-printed JSON of tool input
-        var resultText: String?    // tool_result content (truncated)
+        var rawInput: String? // pretty-printed JSON of tool input
+        var resultText: String? // tool_result content (truncated)
     }
 
     let id: UUID
@@ -110,7 +112,7 @@ struct AgentActivity: Identifiable, Sendable, Equatable {
 /// A file write proposed by the agent. Surfaced in the chat as a diff for the user to
 /// accept or reject. Both Claude (`Write` / `Edit` / `MultiEdit`) and Codex
 /// (`item/fileChange/*`) populate this.
-struct PendingWrite: Sendable {
+struct PendingWrite {
     let path: String
     let content: String
     let originalText: String?

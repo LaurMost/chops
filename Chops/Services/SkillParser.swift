@@ -24,11 +24,9 @@ enum SkillParser {
         let lines = content.components(separatedBy: "\n")
         var name = ""
 
-        for line in lines {
-            if line.hasPrefix("# ") {
-                name = String(line.dropFirst(2)).trimmingCharacters(in: .whitespaces)
-                break
-            }
+        for line in lines where line.hasPrefix("# ") {
+            name = String(line.dropFirst(2)).trimmingCharacters(in: .whitespaces)
+            break
         }
 
         return ParsedSkill(

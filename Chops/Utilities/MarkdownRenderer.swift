@@ -1,7 +1,7 @@
+import cmark
 import Foundation
 import Highlightr
 import JavaScriptCore
-import cmark
 
 enum MarkdownRenderer {
     static func renderHTML(_ markdown: String, isDarkMode: Bool) -> String {
@@ -41,12 +41,12 @@ private final class PreviewCodeHighlighter {
               let bundle,
               let highlightPath = bundle.path(forResource: "highlight.min", ofType: "js"),
               let highlightJS = try? String(contentsOfFile: highlightPath, encoding: .utf8) else {
-            self.hljs = nil
+            hljs = nil
             return
         }
 
         jsContext.evaluateScript(highlightJS)
-        self.hljs = jsContext.objectForKeyedSubscript("hljs")
+        hljs = jsContext.objectForKeyedSubscript("hljs")
     }
 
     func highlightCodeBlocks(in html: String, isDarkMode: Bool) -> String {
@@ -177,7 +177,7 @@ private final class PreviewCodeHighlighter {
         let candidates = overrides + [
             Bundle.main.resourceURL,
             Bundle(for: ResourceBundleFinder.self).resourceURL,
-            Bundle.main.bundleURL
+            Bundle.main.bundleURL,
         ]
 
         for candidate in candidates {

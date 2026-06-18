@@ -12,22 +12,21 @@ import Observation
 @Observable
 @MainActor
 final class ClaudeCLIAgent: AgentSession {
-
     // MARK: - AgentSession state
 
     var responseText: String = ""
     var thoughtText: String = ""
-    var currentActivity: String? = nil
+    var currentActivity: String?
     var pendingWrites: [PendingWrite] = []
     var deferredContent: [String: String] = [:]
-    private(set) var pendingPermissionRequest: PermissionRequest? = nil
+    private(set) var pendingPermissionRequest: PermissionRequest?
     private(set) var isConnected: Bool = false
     private(set) var isConnecting: Bool = false
     private(set) var isProcessing: Bool = false
-    private(set) var turnStartedAt: Date? = nil
+    private(set) var turnStartedAt: Date?
     private(set) var activities: [AgentActivity] = []
-    private(set) var lastError: String? = nil
-    var isBypassMode: Bool = false  // unused in one-shot mode
+    private(set) var lastError: String?
+    var isBypassMode: Bool = false // unused in one-shot mode
 
     // MARK: - Private
 
@@ -41,8 +40,8 @@ final class ClaudeCLIAgent: AgentSession {
 
     func startConnect(workingDirectory: URL, systemPrompt: String?) {
         self.workingDirectory = workingDirectory
-        self.sessionSystemPrompt = systemPrompt
-        self.lastError = nil
+        sessionSystemPrompt = systemPrompt
+        lastError = nil
         guard ToolSource.claude.cliBinaryURL != nil else {
             lastError = AgentError.binaryNotInstalled(
                 toolName: "Claude Code",
@@ -202,7 +201,9 @@ final class ClaudeCLIAgent: AgentSession {
         if resolved != path { deferredContent[resolved] = content }
     }
 
-    func conversationalText(from text: String) -> String { text }
+    func conversationalText(from text: String) -> String {
+        text
+    }
 
     // MARK: - Internals
 
@@ -291,7 +292,7 @@ final class ClaudeCLIAgent: AgentSession {
             let trimmed = errText.trimmingCharacters(in: .whitespacesAndNewlines)
             throw AgentError.launchFailed(
                 "Claude exited with code \(proc.terminationStatus)" +
-                (trimmed.isEmpty ? "" : ":\n\(trimmed.suffix(800))")
+                    (trimmed.isEmpty ? "" : ":\n\(trimmed.suffix(800))")
             )
         }
 

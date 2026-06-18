@@ -1,0 +1,32 @@
+# SwiftFormat configuration for Chops
+# Docs: https://github.com/nicklockwood/SwiftFormat/blob/main/Rules.md
+
+--swiftversion 6.0
+
+# Paths SwiftFormat should never touch (generated project, builds, website, deps)
+--exclude Chops.xcodeproj
+--exclude .build
+--exclude site
+--exclude **/*.generated.swift
+
+# Formatting preferences (kept close to the existing codebase style)
+--indent 4
+--maxwidth none
+--self remove
+--importgrouping testable-bottom
+--trailingclosures
+--stripunusedargs closure-only
+--wraparguments preserve
+--wrapparameters preserve
+--wrapcollections preserve
+
+# Disable opinionated rules that fight the existing codebase style or rewrite
+# structure rather than purely formatting.
+--disable redundantType
+--disable wrapMultilineStatementBraces
+--disable andOperator
+--disable conditionalAssignment
+--disable wrapPropertyBodies
+--disable redundantViewBuilder
+--disable hoistPatternLet
+--disable noForceUnwrapInTests

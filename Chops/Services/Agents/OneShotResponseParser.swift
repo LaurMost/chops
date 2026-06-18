@@ -4,7 +4,6 @@ import Foundation
 /// and Codex (`codex exec --output-last-message`) ask the model for "summary + fenced full
 /// file" or a structured edits JSON envelope; this turns either into `(summary, newContent)`.
 enum OneShotResponseParser {
-
     /// `summary` is plain text the user sees in chat. `newContent` is the proposed file
     /// body — `nil` means the agent replied conversationally with no edit to apply.
     struct Result {
@@ -99,7 +98,7 @@ enum OneShotResponseParser {
         for (i, edit) in edits.enumerated() {
             var occurrences = 0
             var searchStart = content.startIndex
-            while let r = content.range(of: edit.find, range: searchStart..<content.endIndex) {
+            while let r = content.range(of: edit.find, range: searchStart ..< content.endIndex) {
                 occurrences += 1
                 searchStart = r.upperBound
                 if occurrences > 1 { break }

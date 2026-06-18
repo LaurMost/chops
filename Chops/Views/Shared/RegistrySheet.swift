@@ -327,15 +327,15 @@ struct RegistrySheet: View {
                 guard !Task.isCancelled else { return }
                 await MainActor.run {
                     guard selectedSkill?.id == skill.id else { return }
-                    self.skillContent = content
-                    self.isFetchingContent = false
+                    skillContent = content
+                    isFetchingContent = false
                 }
             } catch {
                 guard !Task.isCancelled else { return }
                 await MainActor.run {
                     guard selectedSkill?.id == skill.id else { return }
                     self.error = error.localizedDescription
-                    self.isFetchingContent = false
+                    isFetchingContent = false
                 }
             }
         }

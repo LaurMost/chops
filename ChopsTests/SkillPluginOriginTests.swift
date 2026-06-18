@@ -2,7 +2,6 @@ import XCTest
 @testable import Chops
 
 final class SkillPluginOriginTests: XCTestCase {
-
     private func makeSkill(resolvedPath: String, toolSource: ToolSource = .claude) -> Skill {
         Skill(filePath: "/tmp/skill/SKILL.md", toolSource: toolSource, resolvedPath: resolvedPath)
     }

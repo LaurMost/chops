@@ -40,8 +40,8 @@ private struct MarkdownWebView: NSViewRepresentable {
 
     private static let dynamicBgColor = NSColor(name: nil) { appearance in
         appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-            ? NSColor(red: 0x1A/255.0, green: 0x1A/255.0, blue: 0x1A/255.0, alpha: 1)
-            : NSColor(red: 0xFA/255.0, green: 0xFA/255.0, blue: 0xFA/255.0, alpha: 1)
+            ? NSColor(red: 0x1A / 255.0, green: 0x1A / 255.0, blue: 0x1A / 255.0, alpha: 1)
+            : NSColor(red: 0xFA / 255.0, green: 0xFA / 255.0, blue: 0xFA / 255.0, alpha: 1)
     }
 
     func updateNSView(_ webView: WKWebView, context: Context) {
@@ -334,19 +334,17 @@ private enum RawFrontmatterParser {
             return nil
         }
 
-        for index in 1..<lines.count {
-            if lines[index].trimmingCharacters(in: .whitespaces) == "---" {
-                let frontmatterLines = Array(lines[1..<index])
-                let frontmatter = frontmatterLines.joined(separator: "\n")
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                let contentStart = min(index + 1, lines.count)
-                let content = Array(lines[contentStart...]).joined(separator: "\n")
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                return Result(
-                    frontmatter: frontmatter.isEmpty ? nil : frontmatter,
-                    content: content
-                )
-            }
+        for index in 1 ..< lines.count where lines[index].trimmingCharacters(in: .whitespaces) == "---" {
+            let frontmatterLines = Array(lines[1 ..< index])
+            let frontmatter = frontmatterLines.joined(separator: "\n")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let contentStart = min(index + 1, lines.count)
+            let content = Array(lines[contentStart...]).joined(separator: "\n")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            return Result(
+                frontmatter: frontmatter.isEmpty ? nil : frontmatter,
+                content: content
+            )
         }
 
         return nil

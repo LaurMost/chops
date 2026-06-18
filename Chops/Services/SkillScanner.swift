@@ -1,9 +1,9 @@
 import Foundation
-import SwiftData
 import os
+import SwiftData
 
 /// Data collected from the filesystem for a single skill, before SwiftData persistence.
-struct ScannedSkillData: Sendable {
+struct ScannedSkillData {
     let fileURL: URL
     let resolvedPath: String
     let toolSource: ToolSource
@@ -40,7 +40,7 @@ final class SkillScanner {
     ]
 
     private static func shouldIgnoreLooseMarkdownFile(named fileName: String) -> Bool {
-        return ignoredFileNames.contains(fileName)
+        ignoredFileNames.contains(fileName)
     }
 
     init(modelContext: ModelContext) {
@@ -372,9 +372,9 @@ final class SkillScanner {
 
     private static func isSyntheticLocalResolvedPath(_ resolvedPath: String) -> Bool {
         resolvedPath.hasPrefix("claude-plugin:") ||
-        resolvedPath.hasPrefix("claude-desktop:") ||
-        resolvedPath.hasPrefix("cursor-plugin:") ||
-        resolvedPath.hasPrefix("codex-plugin:")
+            resolvedPath.hasPrefix("claude-desktop:") ||
+            resolvedPath.hasPrefix("cursor-plugin:") ||
+            resolvedPath.hasPrefix("codex-plugin:")
     }
 
     /// Read and parse a single skill file. Pure I/O, no SwiftData.
@@ -391,7 +391,7 @@ final class SkillScanner {
         }
 
         let attrs = try? fm.attributesOfItem(atPath: physicalURL.path)
-        let modDate  = (attrs?[.modificationDate] as? Date) ?? .now
+        let modDate = (attrs?[.modificationDate] as? Date) ?? .now
         let fileSize = (attrs?[.size] as? Int) ?? 0
 
         let name: String

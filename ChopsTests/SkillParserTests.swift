@@ -2,7 +2,6 @@ import XCTest
 @testable import Chops
 
 final class SkillParserTests: XCTestCase {
-
     private var tempDir: URL!
 
     override func setUpWithError() throws {
@@ -25,7 +24,7 @@ final class SkillParserTests: XCTestCase {
 
     // MARK: - Frontmatter format (.md)
 
-    func testParseFrontmatterMd() throws {
+    func testParseFrontmatterMd() {
         let content = """
         ---
         name: My Claude Skill
@@ -41,7 +40,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertEqual(parsed?.content, "Skill body text.")
     }
 
-    func testParseMdcExtension() throws {
+    func testParseMdcExtension() {
         let content = """
         ---
         name: Cursor Rule
@@ -56,7 +55,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertEqual(parsed?.description, "Auto-applies to TypeScript")
     }
 
-    func testParseHeadingFormatForCodexSource() throws {
+    func testParseHeadingFormatForCodexSource() {
         let content = """
         # My Codex Skill
 
@@ -68,7 +67,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertEqual(parsed?.name, "My Codex Skill")
     }
 
-    func testParseHeadingFormatTakesFirstHeading() throws {
+    func testParseHeadingFormatTakesFirstHeading() {
         let content = """
         # First Heading
 
@@ -81,7 +80,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertEqual(parsed?.name, "First Heading")
     }
 
-    func testFrontmatterTakesPriorityOverHeadingForCodexSource() throws {
+    func testFrontmatterTakesPriorityOverHeadingForCodexSource() {
         let content = """
         ---
         name: Frontmatter Name
@@ -95,7 +94,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertEqual(parsed?.name, "Frontmatter Name")
     }
 
-    func testNoNameInHeadingFormatReturnsEmptyName() throws {
+    func testNoNameInHeadingFormatReturnsEmptyName() {
         let content = "Just a paragraph, no heading."
         let url = writeFile(named: "no-heading.md", content: content)
         let parsed = SkillParser.parse(fileURL: url, toolSource: .agents)
@@ -109,7 +108,7 @@ final class SkillParserTests: XCTestCase {
         XCTAssertNil(parsed)
     }
 
-    func testCursorMdFileUsesFrontmatterParser() throws {
+    func testCursorMdFileUsesFrontmatterParser() {
         let content = """
         ---
         name: Cursor Skill MD

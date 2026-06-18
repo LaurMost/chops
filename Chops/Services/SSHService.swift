@@ -179,7 +179,7 @@ enum SSHService {
                 // Extract path from delimiter
                 let start = line.index(line.startIndex, offsetBy: 15)
                 let end = line.index(line.endIndex, offsetBy: -3)
-                currentPath = String(line[start..<end])
+                currentPath = String(line[start ..< end])
                 currentLines = []
             } else {
                 currentLines.append(line)

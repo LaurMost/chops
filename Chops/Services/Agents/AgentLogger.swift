@@ -44,22 +44,28 @@ final class AgentLogger: @unchecked Sendable {
         try? fileHandle?.close()
     }
 
-    func info(_ message: String) { log(level: .info, message: message) }
+    func info(_ message: String) {
+        log(level: .info, message: message)
+    }
+
     func debug(_ message: String) {
         guard debugEnabled else { return }
         log(level: .debug, message: message)
     }
-    func error(_ message: String) { log(level: .error, message: message) }
+
+    func error(_ message: String) {
+        log(level: .error, message: message)
+    }
 
     enum Direction { case send, receive }
 
     /// Log a JSON-encodable value in debug mode. Centralises encoding so callers never duplicate it.
-    func debugLogJSON<T: Encodable>(_ value: T, direction: Direction) {
+    func debugLogJSON(_ value: some Encodable, direction: Direction) {
         guard debugEnabled else { return }
         guard let data = try? JSONEncoder().encode(value),
               let str = String(data: data, encoding: .utf8) else { return }
         switch direction {
-        case .send:    log(level: .debug, message: ">>> SEND: \(str)")
+        case .send: log(level: .debug, message: ">>> SEND: \(str)")
         case .receive: log(level: .debug, message: "<<< RECV: \(str)")
         }
     }
@@ -85,14 +91,14 @@ final class AgentLogger: @unchecked Sendable {
     func clearLogs() {
         queue.async { [weak self] in
             guard let self else { return }
-            try? self.fileHandle?.truncate(atOffset: 0)
-            self.fileHandle?.seek(toFileOffset: 0)
+            try? fileHandle?.truncate(atOffset: 0)
+            fileHandle?.seek(toFileOffset: 0)
             let timestamp = Self.isoFormatter.string(from: Date())
             let line = "[\(timestamp)] [INFO] Logs cleared\n"
             if let data = line.data(using: .utf8) {
-                self.fileHandle?.write(data)
+                fileHandle?.write(data)
             }
-            self.osLog.info("Logs cleared")
+            osLog.info("Logs cleared")
         }
     }
 
@@ -107,7 +113,7 @@ final class AgentLogger: @unchecked Sendable {
         let line = "[\(timestamp)] [\(level.rawValue)] \(message)\n"
 
         switch level {
-        case .info:  osLog.info("\(message)")
+        case .info: osLog.info("\(message)")
         case .debug: osLog.debug("\(message)")
         case .error: osLog.error("\(message)")
         }

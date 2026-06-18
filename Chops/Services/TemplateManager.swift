@@ -20,7 +20,7 @@ final class TemplateManager {
         let frontmatterText = frontmatter.isEmpty
             ? "(none)"
             : frontmatter.sorted(by: { $0.key < $1.key })
-                .map { "\($0.key): \($0.value)" }.joined(separator: "\n")
+            .map { "\($0.key): \($0.value)" }.joined(separator: "\n")
         return base
             .replacingOccurrences(of: "{{skill_name}}", with: skillName.isEmpty ? "(unnamed)" : skillName)
             .replacingOccurrences(of: "{{skill_description}}", with: skillDescription.isEmpty ? "(no description)" : skillDescription)
@@ -33,7 +33,7 @@ final class TemplateManager {
         switch type {
         case .skill: Self.defaultSkillSystemPrompt
         case .agent: Self.defaultAgentSystemPrompt
-        case .rule:  Self.defaultRuleSystemPrompt
+        case .rule: Self.defaultRuleSystemPrompt
         }
     }
 

@@ -8,24 +8,24 @@ enum DiffLineKind {
     var prefix: String {
         switch self {
         case .unchanged: " "
-        case .added:     "+"
-        case .removed:   "-"
+        case .added: "+"
+        case .removed: "-"
         }
     }
 
     var prefixColor: Color {
         switch self {
         case .unchanged: .secondary
-        case .added:     .green
-        case .removed:   .red
+        case .added: .green
+        case .removed: .red
         }
     }
 
     var background: Color {
         switch self {
         case .unchanged: .clear
-        case .added:     Color.green.opacity(0.12)
-        case .removed:   Color.red.opacity(0.12)
+        case .added: Color.green.opacity(0.12)
+        case .removed: Color.red.opacity(0.12)
         }
     }
 }
@@ -55,7 +55,7 @@ func computeDiff(from original: String, to proposed: String) -> [DiffLine] {
 
     // Guard: prevent OOM on very large files. Beyond 3 000 lines the LCS matrix
     // exceeds ~72 MB. Treat oversized input as a full replacement diff.
-    let lineLimit = 3_000
+    let lineLimit = 3000
     guard m <= lineLimit, n <= lineLimit else {
         let removals = a.map { DiffLine(text: $0, kind: .removed) }
         let additions = b.map { DiffLine(text: $0, kind: .added) }
@@ -63,9 +63,9 @@ func computeDiff(from original: String, to proposed: String) -> [DiffLine] {
     }
 
     var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
-    for i in 1...m {
-        for j in 1...n {
-            dp[i][j] = a[i-1] == b[j-1] ? dp[i-1][j-1] + 1 : max(dp[i-1][j], dp[i][j-1])
+    for i in 1 ... m {
+        for j in 1 ... n {
+            dp[i][j] = a[i - 1] == b[j - 1] ? dp[i - 1][j - 1] + 1 : max(dp[i - 1][j], dp[i][j - 1])
         }
     }
 
@@ -73,8 +73,8 @@ func computeDiff(from original: String, to proposed: String) -> [DiffLine] {
     var pairs: [(Int, Int)] = []
     var i = m, j = n
     while i > 0 && j > 0 {
-        if a[i-1] == b[j-1] { pairs.append((i-1, j-1)); i -= 1; j -= 1 }
-        else if dp[i-1][j] >= dp[i][j-1] { i -= 1 } else { j -= 1 }
+        if a[i - 1] == b[j - 1] { pairs.append((i - 1, j - 1)); i -= 1; j -= 1 }
+        else if dp[i - 1][j] >= dp[i][j - 1] { i -= 1 } else { j -= 1 }
     }
     pairs.reverse()
 
@@ -82,13 +82,21 @@ func computeDiff(from original: String, to proposed: String) -> [DiffLine] {
     var result: [DiffLine] = []
     var ai = 0, bi = 0
     for (oi, pi) in pairs {
-        while ai < oi { result.append(DiffLine(text: a[ai], kind: .removed)); ai += 1 }
-        while bi < pi { result.append(DiffLine(text: b[bi], kind: .added));   bi += 1 }
+        while ai < oi {
+            result.append(DiffLine(text: a[ai], kind: .removed)); ai += 1
+        }
+        while bi < pi {
+            result.append(DiffLine(text: b[bi], kind: .added)); bi += 1
+        }
         result.append(DiffLine(text: a[ai], kind: .unchanged))
         ai += 1; bi += 1
     }
-    while ai < m { result.append(DiffLine(text: a[ai], kind: .removed)); ai += 1 }
-    while bi < n { result.append(DiffLine(text: b[bi], kind: .added));   bi += 1 }
+    while ai < m {
+        result.append(DiffLine(text: a[ai], kind: .removed)); ai += 1
+    }
+    while bi < n {
+        result.append(DiffLine(text: b[bi], kind: .added)); bi += 1
+    }
     return result
 }
 
@@ -105,8 +113,8 @@ struct DiffReviewPanel: View {
 
     @State private var lines: [DiffLine] = []
 
-    private var addedCount:   Int { lines.filter { $0.kind == .added   }.count }
-    private var removedCount: Int { lines.filter { $0.kind == .removed }.count }
+    private var addedCount: Int { lines.count(where: { $0.kind == .added }) }
+    private var removedCount: Int { lines.count(where: { $0.kind == .removed }) }
 
     var body: some View {
         VStack(spacing: 0) {

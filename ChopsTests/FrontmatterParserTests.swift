@@ -2,7 +2,6 @@ import XCTest
 @testable import Chops
 
 final class FrontmatterParserTests: XCTestCase {
-
     // MARK: - No frontmatter
 
     func testEmptyString() {
@@ -144,7 +143,6 @@ final class FrontmatterParserTests: XCTestCase {
 // MARK: - MDCParser
 
 final class MDCParserTests: XCTestCase {
-
     func testMDCParserDelegatesToFrontmatterParser() {
         let text = "---\nname: Cursor Rule\ndescription: A cursor rule\n---\nRule content here."
         let mdcResult = MDCParser.parse(text)

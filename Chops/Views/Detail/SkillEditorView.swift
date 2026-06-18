@@ -1,6 +1,6 @@
-import SwiftUI
 import AppKit
 import os
+import SwiftUI
 
 @Observable
 final class SkillEditorDocument {
@@ -10,6 +10,7 @@ final class SkillEditorDocument {
             hasUnsavedChanges = editorContent != fullFileContent
         }
     }
+
     var hasUnsavedChanges = false
     var isLoadingRemote = false
     var isSavingRemote = false
@@ -211,7 +212,6 @@ struct SkillEditorView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-
             }
             .padding(12)
         }
@@ -266,7 +266,7 @@ struct HighlightedTextEditor: NSViewRepresentable {
             .font: EditorTheme.editorFont,
             .foregroundColor: EditorTheme.textColor,
             .paragraphStyle: paragraph,
-            .baselineOffset: EditorTheme.editorBaselineOffset
+            .baselineOffset: EditorTheme.editorBaselineOffset,
         ]
 
         // Insets
@@ -318,7 +318,7 @@ struct HighlightedTextEditor: NSViewRepresentable {
                 .font: EditorTheme.editorFont,
                 .foregroundColor: EditorTheme.textColor,
                 .paragraphStyle: paragraph,
-                .baselineOffset: EditorTheme.editorBaselineOffset
+                .baselineOffset: EditorTheme.editorBaselineOffset,
             ]
 
             context.coordinator.isHighlightingInProgress = true
@@ -366,9 +366,9 @@ struct HighlightedTextEditor: NSViewRepresentable {
             let newText = textView.string
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                self.isUpdating = true
-                self.parent.text = newText
-                self.isUpdating = false
+                isUpdating = true
+                parent.text = newText
+                isUpdating = false
             }
         }
     }
