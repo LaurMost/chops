@@ -18,6 +18,12 @@ _Avoid_: Global prompt, persistent instruction
 **Plugin**: A packaged collection of skills/agents/rules distributed via a marketplace and cached locally by the tool. Plugin skills are read-only (the cache is tool-managed). Distinct from user-authored skills in the global skills directory.
 _Avoid_: Extension, package
 
+**Plugin package**: The named, marketplace-distributed unit a plugin skill belongs to (e.g. `everything-claude-code`). It is the second path component of a plugin's synthetic `resolvedPath` and the user-facing label for plugin origin.
+_Avoid_: Bundle, marketplace entry
+
+**Publisher / Namespace**: The grouping a plugin package sits under — a publisher for Claude/Cursor caches, an OpenAI namespace (`openai-curated`, `openai-bundled`, `openai-curated-remote`) for Codex. The first path component of a plugin's synthetic `resolvedPath`. Coarser than a plugin package; secondary to it for display.
+_Avoid_: Vendor, org, marketplace
+
 **ToolSource**: An enum case identifying the coding agent tool that owns or uses a discoverable item (e.g. `.claude`, `.cursor`, `.codex`). Also determines which filesystem paths to scan.
 _Avoid_: Tool, provider, agent (overloaded)
 
@@ -31,6 +37,9 @@ _Avoid_: File path, canonical path
 
 **installedPaths**: The set of raw filesystem paths where a skill is physically present (e.g. both `~/.claude/skills/foo/SKILL.md` and `~/.cursor/skills/foo/SKILL.md` for a symlinked skill). Multiple paths collapse to one skill entry via the shared `resolvedPath`.
 _Avoid_: Locations, copies
+
+**Tool install**: A skill is _installed in_ a tool when a file or symlink for it exists under that tool's scanned directory. This is derived purely from discovery — there is no separate stored record of installation. Installing a skill into another tool means symlinking its canonical directory into that tool's global skills directory; uninstalling removes only that symlink, never the canonical source.
+_Avoid_: Linked, attached, enabled
 
 **isGlobal**: Whether a skill was found in a tool's global (home-directory) skills directory, as opposed to a project-local directory (e.g. `.claude/skills/` inside a repo).
 _Avoid_: Global flag, scope

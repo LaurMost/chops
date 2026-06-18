@@ -72,9 +72,9 @@ final class SkillScanner {
         scanGeneration += 1
         let generation = scanGeneration
         let customPaths = UserDefaults.standard.stringArray(forKey: "customScanPaths") ?? []
-        let includePlugins = ChopsSettings.includePluginSkills
+        let pluginTools = ChopsSettings.enabledPluginTools
         scanTask = Task.detached { [weak self] in
-            let results = Self.collectAllSkills(customPaths: customPaths, includePlugins: includePlugins)
+            let results = Self.collectAllSkills(customPaths: customPaths, pluginTools: pluginTools)
             guard !Task.isCancelled else { return }
             let elapsed = CFAbsoluteTimeGetCurrent() - start
             AppLogger.scanning.notice("File collection done: \(results.count) skills in \(String(format: "%.2f", elapsed))s")
@@ -89,7 +89,7 @@ final class SkillScanner {
     }
 
     /// Pure filesystem I/O — safe to run off main thread.
-    private static func collectAllSkills(customPaths: [String], includePlugins: Bool) -> [ScannedSkillData] {
+    private static func collectAllSkills(customPaths: [String], pluginTools: Set<ToolSource>) -> [ScannedSkillData] {
         var results: [ScannedSkillData] = []
 
         for tool in ToolSource.allCases where tool != .custom {
@@ -111,23 +111,20 @@ final class SkillScanner {
             }
         }
 
-        if includePlugins {
-            // CLI plugins (installed_plugins.json)
+        // Claude toggle covers both CLI plugins and Claude Desktop/Cowork plugin skills.
+        if pluginTools.contains(.claude) {
             if ToolSource.claude.isInstalled {
                 collectFromCLIPlugins(into: &results)
             }
-            // Claude Desktop/Cowork plugin skills
             if ToolSource.claudeDesktop.isInstalled {
                 collectClaudeDesktopSkills(into: &results)
             }
-            // Cursor plugin cache
-            if ToolSource.cursor.isInstalled {
-                collectFromCursorPlugins(into: &results)
-            }
-            // Codex plugin cache
-            if ToolSource.codex.isInstalled {
-                collectFromCodexPlugins(into: &results)
-            }
+        }
+        if pluginTools.contains(.cursor), ToolSource.cursor.isInstalled {
+            collectFromCursorPlugins(into: &results)
+        }
+        if pluginTools.contains(.codex), ToolSource.codex.isInstalled {
+            collectFromCodexPlugins(into: &results)
         }
 
         for path in customPaths {

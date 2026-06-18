@@ -261,6 +261,24 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    /// Whether this tool has a plugin cache present on disk that Chops can scan.
+    /// The Claude case also covers Claude Desktop/Cowork plugin skills.
+    var hasPluginCache: Bool {
+        let fm = FileManager.default
+        let home = fm.homeDirectoryForCurrentUser.path
+        switch self {
+        case .claude:
+            return fm.fileExists(atPath: "\(home)/.claude/plugins/installed_plugins.json")
+                || fm.fileExists(atPath: "\(home)/.claude/plugins/cache")
+        case .cursor:
+            return fm.fileExists(atPath: "\(home)/.cursor/plugins/cache")
+        case .codex:
+            return fm.fileExists(atPath: "\(home)/.codex/plugins/cache")
+        default:
+            return false
+        }
+    }
+
     private static func appBundleExists(_ name: String) -> Bool {
         let fm = FileManager.default
         let home = fm.homeDirectoryForCurrentUser.path
