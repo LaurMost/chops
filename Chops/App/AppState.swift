@@ -7,6 +7,7 @@ final class AppState {
     var searchText: String = ""
     var showingNewSkillSheet: Bool = false
     var showingRegistrySheet: Bool = false
+    var showingGlobalSearch: Bool = false
     var newItemKind: ItemKind = .skill
     var sidebarFilter: SidebarFilter = .allSkills
     /// Filter by item kind within a tool view (nil = show all)
