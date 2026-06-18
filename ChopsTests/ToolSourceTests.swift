@@ -147,4 +147,31 @@ final class ToolSourceTests: XCTestCase {
             XCTAssertEqual(decoded, tool, "Round-trip failed for \(tool)")
         }
     }
+
+    // MARK: - installURL
+
+    func testInstallURLIsNilForToolsWithoutKnownURL() {
+        XCTAssertNil(ToolSource.agents.installURL)
+        XCTAssertNil(ToolSource.custom.installURL)
+        XCTAssertNil(ToolSource.claudeDesktop.installURL)
+        XCTAssertNil(ToolSource.aider.installURL)
+        XCTAssertNil(ToolSource.hermes.installURL)
+        XCTAssertNil(ToolSource.pi.installURL)
+        XCTAssertNil(ToolSource.openclaw.installURL)
+    }
+
+    func testInstallURLIsNonNilForKnownTools() {
+        let knownTools: [ToolSource] = [.claude, .cursor, .codex, .windsurf, .copilot, .amp, .augment, .opencode]
+        for tool in knownTools {
+            XCTAssertNotNil(tool.installURL, "\(tool) should have an installURL")
+        }
+    }
+
+    func testInstallURLsAreValidHTTPS() {
+        for tool in ToolSource.allCases {
+            guard let url = tool.installURL else { continue }
+            XCTAssertEqual(url.scheme, "https", "\(tool) installURL should use https")
+            XCTAssertNotNil(url.host, "\(tool) installURL should have a host")
+        }
+    }
 }

@@ -17,7 +17,9 @@ struct ContentView: View {
         } content: {
             SkillListView()
         } detail: {
-            if let skill = appState.selectedSkill {
+            if appState.sidebarFilter == .toolsOverview {
+                ToolsOverviewView()
+            } else if let skill = appState.selectedSkill {
                 SkillDetailView(skill: skill)
             } else {
                 ContentUnavailableView(
@@ -36,6 +38,10 @@ struct ContentView: View {
         }
         .sheet(isPresented: $appState.showingRegistrySheet) {
             RegistrySheet()
+        }
+        .sheet(isPresented: $appState.showingGlobalSearch) {
+            GlobalSearchView()
+                .environment(appState)
         }
         .onChange(of: appState.sidebarFilter) {
             appState.toolKindFilter = nil

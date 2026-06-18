@@ -351,6 +351,21 @@ enum ToolSource: String, Codable, CaseIterable, Identifiable {
         return nil
     }
 
+    var installURL: URL? {
+        switch self {
+        case .augment: URL(string: "https://www.augmentcode.com")
+        case .claude: URL(string: "https://claude.ai/download")
+        case .cursor: URL(string: "https://cursor.sh")
+        case .windsurf: URL(string: "https://windsurf.ai")
+        case .codex: URL(string: "https://openai.com/codex")
+        case .copilot: URL(string: "https://github.com/features/copilot")
+        case .amp: URL(string: "https://ampcode.com")
+        case .opencode: URL(string: "https://opencode.ai")
+        case .antigravity: URL(string: "https://antigravity.ai")
+        case .hermes, .openclaw, .pi, .aider, .agents, .claudeDesktop, .custom: nil
+        }
+    }
+
     /// Resolved binary URL for tools that can be driven directly via subprocess.
     /// Currently used by Claude and Codex transports.
     var cliBinaryURL: URL? {

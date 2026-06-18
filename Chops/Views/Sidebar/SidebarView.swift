@@ -57,6 +57,9 @@ struct SidebarView: View {
             }
 
             Section("Tools") {
+                Label("All Tools", systemImage: "square.grid.2x2")
+                    .tag(SidebarFilter.toolsOverview)
+
                 ForEach(activeSources) { tool in
                     Label {
                         Text(tool.displayName)
