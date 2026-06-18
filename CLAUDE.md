@@ -27,7 +27,26 @@ xcodebuild -scheme Chops -configuration LocalRelease
 
 Requires: Xcode, `brew install xcodegen`, macOS 15+. Sparkle (>= 2.6.0) is the only external dependency (auto-updates via GitHub Releases).
 
-No test suite exists. Validate manually by building and running.
+## Tests, Linting & CI
+
+```bash
+# Run the unit test suite (XCTest target ChopsTests)
+xcodebuild -scheme Chops -configuration Debug -destination 'platform=macOS' test
+
+# Formatting — SwiftFormat owns formatting (config: .swiftformat)
+swiftformat Chops ChopsTests          # apply
+swiftformat Chops ChopsTests --lint   # check only (used in CI)
+
+# Linting — SwiftLint owns correctness/code-smell rules (config: .swiftlint.yml)
+swiftlint lint --strict               # used in CI; warnings fail the build
+```
+
+Install tooling with `brew install swiftlint swiftformat`. GitHub Actions
+(`.github/workflows/ci.yml`) runs two jobs on every push to `main` and every PR:
+a **Lint & Format** job (SwiftFormat `--lint` + SwiftLint `--strict`) and a
+**Build & Test** job (xcodegen → `xcodebuild test`). Unit tests cover the pure,
+logic-heavy code (parsers, `ToolSource`, agent response parsing, plugin-origin
+helpers); UI behavior is still validated manually by building and running.
 
 ## Development Rules
 
