@@ -10,8 +10,8 @@ enum SearchService {
 
         return allSkills.filter { skill in
             skill.name.localizedCaseInsensitiveContains(query) ||
-            skill.skillDescription.localizedCaseInsensitiveContains(query) ||
-            skill.content.localizedCaseInsensitiveContains(query)
+                skill.skillDescription.localizedCaseInsensitiveContains(query) ||
+                skill.content.localizedCaseInsensitiveContains(query)
         }
     }
 }

@@ -2,7 +2,6 @@ import XCTest
 @testable import Chops
 
 final class OneShotResponseParserTests: XCTestCase {
-
     // MARK: - Plain text (no code fence)
 
     func testPlainTextNoFenceReturnsSummaryOnly() {

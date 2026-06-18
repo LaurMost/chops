@@ -7,7 +7,7 @@ enum AgentFactory {
     static func make(for agentId: AgentID) -> any AgentSession {
         switch agentId {
         case .claude: return ClaudeCLIAgent()
-        case .codex:  return CodexCLIAgent()
+        case .codex: return CodexCLIAgent()
         }
     }
 }

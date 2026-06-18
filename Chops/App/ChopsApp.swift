@@ -1,6 +1,6 @@
-import SwiftUI
-import SwiftData
 import Sparkle
+import SwiftData
+import SwiftUI
 
 @main
 struct ChopsApp: App {
@@ -75,7 +75,7 @@ struct CheckForUpdatesView: View {
 
     init(updater: SPUUpdater) {
         self.updater = updater
-        self.checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
+        checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
     var body: some View {
@@ -91,7 +91,7 @@ final class CheckForUpdatesViewModel: ObservableObject {
     private var observation: Any?
 
     init(updater: SPUUpdater) {
-        observation = updater.observe(\.canCheckForUpdates, options: [.initial, .new]) { [weak self] updater, change in
+        observation = updater.observe(\.canCheckForUpdates, options: [.initial, .new]) { [weak self] updater, _ in
             DispatchQueue.main.async {
                 self?.canCheckForUpdates = updater.canCheckForUpdates
             }

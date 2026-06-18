@@ -51,13 +51,13 @@ enum SchemaV1: VersionedSchema {
         ) {
             self.resolvedPath = resolvedPath.isEmpty ? filePath : resolvedPath
             self.filePath = filePath
-            self.toolSourcesRaw = toolSource.rawValue
-            self.installedPathsData = try? JSONEncoder().encode([filePath])
+            toolSourcesRaw = toolSource.rawValue
+            installedPathsData = try? JSONEncoder().encode([filePath])
             self.isDirectory = isDirectory
             self.name = name
             self.skillDescription = skillDescription
             self.content = content
-            self.frontmatterData = try? JSONEncoder().encode(frontmatter)
+            frontmatterData = try? JSONEncoder().encode(frontmatter)
             self.collections = collections
             self.isFavorite = isFavorite
             self.lastOpened = lastOpened
@@ -107,13 +107,13 @@ enum SchemaV1: VersionedSchema {
             username: String,
             skillsBasePath: String
         ) {
-            self.id = UUID().uuidString
+            id = UUID().uuidString
             self.label = label
             self.host = host
             self.port = port
             self.username = username
             self.skillsBasePath = skillsBasePath
-            self.skills = []
+            skills = []
         }
     }
 }

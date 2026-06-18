@@ -1,5 +1,5 @@
-import SwiftData
 import Foundation
+import SwiftData
 
 enum ItemKind: String, Codable, CaseIterable {
     case skill
@@ -36,10 +36,10 @@ extension Skill {
 
     var isPlugin: Bool {
         filePath.contains("/.claude/plugins/") ||
-        filePath.contains("/local-agent-mode-sessions/") ||
-        toolSources.contains(.claudeDesktop) ||
-        resolvedPath.hasPrefix("cursor-plugin:") ||
-        resolvedPath.hasPrefix("codex-plugin:")
+            filePath.contains("/local-agent-mode-sessions/") ||
+            toolSources.contains(.claudeDesktop) ||
+            resolvedPath.hasPrefix("cursor-plugin:") ||
+            resolvedPath.hasPrefix("codex-plugin:")
     }
 
     var isReadOnly: Bool {

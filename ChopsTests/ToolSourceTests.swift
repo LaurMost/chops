@@ -2,7 +2,6 @@ import XCTest
 @testable import Chops
 
 final class ToolSourceTests: XCTestCase {
-
     // MARK: - Identity
 
     func testIdEqualsRawValue() {

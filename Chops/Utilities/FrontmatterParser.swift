@@ -16,11 +16,9 @@ enum FrontmatterParser {
         }
 
         var endIndex: Int?
-        for i in 1..<lines.count {
-            if lines[i].trimmingCharacters(in: .whitespaces) == "---" {
-                endIndex = i
-                break
-            }
+        for i in 1 ..< lines.count where lines[i].trimmingCharacters(in: .whitespaces) == "---" {
+            endIndex = i
+            break
         }
 
         guard let end = endIndex else {
@@ -28,10 +26,10 @@ enum FrontmatterParser {
         }
 
         var frontmatter: [String: String] = [:]
-        for i in 1..<end {
+        for i in 1 ..< end {
             let line = lines[i]
             if let colonIndex = line.firstIndex(of: ":") {
-                let key = String(line[line.startIndex..<colonIndex]).trimmingCharacters(in: .whitespaces)
+                let key = String(line[line.startIndex ..< colonIndex]).trimmingCharacters(in: .whitespaces)
                 let value = String(line[line.index(after: colonIndex)...]).trimmingCharacters(in: .whitespaces)
                 if !key.isEmpty {
                     frontmatter[key] = value

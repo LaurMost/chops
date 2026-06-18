@@ -1,7 +1,6 @@
 import AppKit
 
 final class MarkdownSyntaxHighlighter: NSObject {
-
     private var isHighlighting = false
 
     // MARK: - Regex Patterns
@@ -98,7 +97,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
             .font: EditorTheme.editorFont,
             .foregroundColor: EditorTheme.textColor,
             .paragraphStyle: paragraph,
-            .baselineOffset: EditorTheme.editorBaselineOffset
+            .baselineOffset: EditorTheme.editorBaselineOffset,
         ], range: fullRange)
 
         // Track code/frontmatter block ranges to skip inner highlighting
@@ -106,7 +105,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
 
         for (regex, style) in Self.patterns {
             regex.enumerateMatches(in: text, range: fullRange) { match, _, _ in
-                guard let match = match else { return }
+                guard let match else { return }
 
                 // Skip if inside a protected block (unless this IS a protected block pattern)
                 if style != .codeBlock && style != .frontmatter {
@@ -124,7 +123,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
                         textStorage.addAttribute(.foregroundColor, value: EditorTheme.syntaxColor, range: syntaxRange)
                         textStorage.addAttributes([
                             .foregroundColor: EditorTheme.headingColor,
-                            .font: NSFont.monospacedSystemFont(ofSize: EditorTheme.editorFontSize + 4, weight: .bold)
+                            .font: NSFont.monospacedSystemFont(ofSize: EditorTheme.editorFontSize + 4, weight: .bold),
                         ], range: contentRange)
                     }
 
@@ -137,7 +136,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
                         textStorage.addAttribute(.foregroundColor, value: EditorTheme.syntaxColor, range: closeRange)
                         textStorage.addAttributes([
                             .foregroundColor: EditorTheme.boldColor,
-                            .font: NSFont.monospacedSystemFont(ofSize: EditorTheme.editorFontSize, weight: .bold)
+                            .font: NSFont.monospacedSystemFont(ofSize: EditorTheme.editorFontSize, weight: .bold),
                         ], range: contentRange)
                     }
 
@@ -154,7 +153,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
                         let italicFont = NSFontManager.shared.convert(EditorTheme.editorFont, toHaveTrait: .italicFontMask)
                         textStorage.addAttributes([
                             .foregroundColor: EditorTheme.italicColor,
-                            .font: italicFont
+                            .font: italicFont,
                         ], range: contentRange)
                     }
 
@@ -167,7 +166,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
                         textStorage.addAttribute(.foregroundColor, value: EditorTheme.syntaxColor, range: closeRange)
                         textStorage.addAttributes([
                             .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                            .foregroundColor: EditorTheme.syntaxColor
+                            .foregroundColor: EditorTheme.syntaxColor,
                         ], range: contentRange)
                     }
 
@@ -239,7 +238,7 @@ final class MarkdownSyntaxHighlighter: NSObject {
                         let bodyRange = match.range(at: 1)
                         if bodyRange.location != NSNotFound, let keyRegex = Self.frontmatterKeyRegex {
                             keyRegex.enumerateMatches(in: text, range: bodyRange) { keyMatch, _, _ in
-                                guard let keyMatch = keyMatch, keyMatch.numberOfRanges >= 3 else { return }
+                                guard let keyMatch, keyMatch.numberOfRanges >= 3 else { return }
                                 textStorage.addAttribute(.foregroundColor, value: EditorTheme.headingColor, range: keyMatch.range(at: 1))
                                 textStorage.addAttribute(.foregroundColor, value: EditorTheme.syntaxColor, range: keyMatch.range(at: 2))
                             }

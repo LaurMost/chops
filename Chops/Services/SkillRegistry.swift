@@ -26,8 +26,8 @@ final class SkillRegistry {
         var formattedInstalls: String {
             if installs >= 1_000_000 {
                 return "\(String(format: "%.1f", Double(installs) / 1_000_000).replacingOccurrences(of: ".0", with: ""))M"
-            } else if installs >= 1_000 {
-                return "\(String(format: "%.1f", Double(installs) / 1_000).replacingOccurrences(of: ".0", with: ""))K"
+            } else if installs >= 1000 {
+                return "\(String(format: "%.1f", Double(installs) / 1000).replacingOccurrences(of: ".0", with: ""))K"
             }
             return "\(installs)"
         }
@@ -157,6 +157,7 @@ final class SkillRegistry {
                 let path: String
                 let type: String
             }
+
             let tree: [TreeEntry]
         }
 

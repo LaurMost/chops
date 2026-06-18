@@ -37,7 +37,7 @@ final class FileWatcher {
         source.setEventHandler { [weak self] in
             guard let self else { return }
             AppLogger.fileIO.debug("File change detected: \(path)")
-            self.debouncedCallback(path)
+            debouncedCallback(path)
         }
 
         source.setCancelHandler {

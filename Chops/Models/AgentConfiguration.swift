@@ -2,7 +2,7 @@ import Foundation
 
 /// Stable identifier for the supported coding agents. Currently just Claude Code and
 /// Codex — both driven directly by spawning the user's installed binary.
-enum AgentID: String, Codable, CaseIterable, Identifiable, Sendable {
+enum AgentID: String, Codable, CaseIterable, Identifiable {
     case claude
     case codex
 
@@ -11,14 +11,14 @@ enum AgentID: String, Codable, CaseIterable, Identifiable, Sendable {
     var displayName: String {
         switch self {
         case .claude: "Claude Code"
-        case .codex:  "Codex"
+        case .codex: "Codex"
         }
     }
 
     var description: String {
         switch self {
         case .claude: "Anthropic's Claude Code, driven via a one-shot `claude --print` invocation."
-        case .codex:  "OpenAI Codex, driven via a one-shot `codex exec` invocation."
+        case .codex: "OpenAI Codex, driven via a one-shot `codex exec` invocation."
         }
     }
 
@@ -26,7 +26,7 @@ enum AgentID: String, Codable, CaseIterable, Identifiable, Sendable {
     var installURL: URL {
         switch self {
         case .claude: URL(string: "https://claude.ai/download")!
-        case .codex:  URL(string: "https://github.com/openai/codex/releases")!
+        case .codex: URL(string: "https://github.com/openai/codex/releases")!
         }
     }
 
@@ -34,7 +34,7 @@ enum AgentID: String, Codable, CaseIterable, Identifiable, Sendable {
     var toolSource: ToolSource {
         switch self {
         case .claude: .claude
-        case .codex:  .codex
+        case .codex: .codex
         }
     }
 }
@@ -69,13 +69,13 @@ final class AgentConfiguration {
             // Migrate legacy values from the previous registry-driven scheme.
             switch raw {
             case "claude-acp", "claude": return .claude
-            case "codex-acp",  "codex":  return .codex
+            case "codex-acp", "codex": return .codex
             default: return nil
             }
         })
 
         if hasStoredValue {
-            self.enabledIds = migrated
+            enabledIds = migrated
         } else {
             // First run: auto-enable every supported agent whose binary we can detect on disk.
             // Saves the user from a no-op trip to Settings just to flip toggles for tools they
@@ -84,12 +84,14 @@ final class AgentConfiguration {
             for id in AgentID.allCases where id.toolSource.cliBinaryURL != nil {
                 initial.insert(id)
             }
-            self.enabledIds = initial
+            enabledIds = initial
             defaults.set(initial.map(\.rawValue), forKey: Self.enabledIdsKey)
         }
     }
 
-    func isEnabled(_ id: AgentID) -> Bool { enabledIds.contains(id) }
+    func isEnabled(_ id: AgentID) -> Bool {
+        enabledIds.contains(id)
+    }
 
     func setEnabled(_ id: AgentID, _ on: Bool) {
         if on { enabledIds.insert(id) } else { enabledIds.remove(id) }

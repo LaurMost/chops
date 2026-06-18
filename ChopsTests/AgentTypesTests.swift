@@ -4,7 +4,6 @@ import XCTest
 // MARK: - AgentDataDecoding
 
 final class AgentDataDecodingTests: XCTestCase {
-
     func testNilDataReturnsNil() {
         XCTAssertNil(AgentDataDecoding.text(from: nil))
     }
@@ -30,7 +29,6 @@ final class AgentDataDecodingTests: XCTestCase {
 // MARK: - AgentError
 
 final class AgentErrorTests: XCTestCase {
-
     func testNoSessionDescription() {
         let error = AgentError.noSession
         XCTAssertEqual(error.errorDescription, "No active agent session.")
@@ -67,7 +65,6 @@ final class AgentErrorTests: XCTestCase {
 // MARK: - OneShotPrompts
 
 final class OneShotPromptsTests: XCTestCase {
-
     func testDefaultSystemPromptContainsFilename() {
         let prompt = OneShotPrompts.defaultSystemPrompt(filePath: "/some/path/my-skill.md")
         XCTAssertTrue(prompt.contains("my-skill.md"))
@@ -131,7 +128,6 @@ final class OneShotPromptsTests: XCTestCase {
 // MARK: - PermissionResponse
 
 final class PermissionResponseTests: XCTestCase {
-
     func testChoiceFactory() {
         let response = PermissionResponse.choice("allow_once")
         XCTAssertEqual(response.optionId, "allow_once")

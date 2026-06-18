@@ -1,5 +1,5 @@
-import SwiftUI
 import Sparkle
+import SwiftUI
 
 extension Notification.Name {
     static let customScanPathsChanged = Notification.Name("customScanPathsChanged")

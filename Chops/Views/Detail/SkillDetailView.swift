@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// Transparent NSView overlay that intercepts AppKit hit-testing so it owns
 /// cursor management (pointing hand) and click handling, beating NSTextView's

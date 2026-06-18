@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -78,7 +78,7 @@ struct ContentView: View {
             scanner.removeDeletedSkills()
         }
         watcher.watchDirectories(allPaths)
-        self.fileWatcher = watcher
+        fileWatcher = watcher
         AppLogger.ui.notice("File watchers active on \(allPaths.count) directories")
 
         // Sync remote servers in the background

@@ -31,7 +31,7 @@ enum DiagnosticExporter {
         lines.append("- Skills: \(skillsOnly.count)")
         lines.append("- Agents: \(agentsOnly.count)")
         for tool in ToolSource.allCases {
-            let count = skills.filter { $0.toolSources.contains(tool) }.count
+            let count = skills.count(where: { $0.toolSources.contains(tool) })
             if count > 0 {
                 lines.append("- \(tool.displayName): \(count)")
             }

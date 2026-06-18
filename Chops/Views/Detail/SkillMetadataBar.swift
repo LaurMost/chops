@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct SkillMetadataBar: View {
     @Bindable var skill: Skill

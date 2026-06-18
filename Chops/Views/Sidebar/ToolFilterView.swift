@@ -1,12 +1,12 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ToolFilterView: View {
     @Environment(AppState.self) private var appState
     @Query(sort: \Skill.name) private var allSkills: [Skill]
 
     private func count(for tool: ToolSource) -> Int {
-        allSkills.filter { $0.toolSources.contains(tool) }.count
+        allSkills.count(where: { $0.toolSources.contains(tool) })
     }
 
     private var activeSources: [ToolSource] {

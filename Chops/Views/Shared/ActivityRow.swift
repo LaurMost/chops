@@ -51,9 +51,9 @@ struct ActivityRow: View {
 
     private var textColor: Color {
         switch activity.status {
-        case .failed:  return .red
+        case .failed: return .red
         case .applied: return .primary
-        default:       return .primary
+        default: return .primary
         }
     }
 
