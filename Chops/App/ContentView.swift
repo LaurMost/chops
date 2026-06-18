@@ -37,6 +37,10 @@ struct ContentView: View {
         .sheet(isPresented: $appState.showingRegistrySheet) {
             RegistrySheet()
         }
+        .sheet(isPresented: $appState.showingGlobalSearch) {
+            GlobalSearchView()
+                .environment(appState)
+        }
         .onChange(of: appState.sidebarFilter) {
             appState.toolKindFilter = nil
         }

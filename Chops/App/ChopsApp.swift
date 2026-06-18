@@ -46,6 +46,12 @@ struct ChopsApp: App {
                 .keyboardShortcut("s", modifiers: .command)
                 .disabled(appState.selectedSkill == nil)
             }
+            CommandGroup(after: .newItem) {
+                Button("Global Search") {
+                    appState.showingGlobalSearch = true
+                }
+                .keyboardShortcut("o", modifiers: [.command, .shift])
+            }
             CommandGroup(after: .appInfo) {
                 CheckForUpdatesView(updater: updaterController.updater)
             }
