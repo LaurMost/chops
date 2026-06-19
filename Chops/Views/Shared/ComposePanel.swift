@@ -140,13 +140,13 @@ struct ComposePanel: View {
 
     @ViewBuilder
     private func simplePermissionSheet(request: PermissionRequest) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
             Label("Permission Required", systemImage: "hand.raised.fill")
                 .font(.headline)
             Text(request.title)
                 .foregroundStyle(.secondary)
             Divider()
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
                 ForEach(request.options, id: \.optionId) { option in
                     Button(option.name) {
                         agent?.respondToPermission(optionId: option.optionId)
@@ -161,8 +161,8 @@ struct ComposePanel: View {
             }
             .foregroundStyle(.secondary)
         }
-        .padding(24)
-        .frame(minWidth: 320, maxWidth: 440)
+        .padding(Spacing.xl)
+        .frame(minWidth: 320, maxWidth: Sizing.sheetNarrow)
     }
 
     @ViewBuilder
@@ -170,8 +170,8 @@ struct ComposePanel: View {
         let fileName = URL(fileURLWithPath: diff.path).lastPathComponent
         let approveOption = request.options.first { $0.kind.hasPrefix("allow") }
         let rejectOption = request.options.first { $0.kind.hasPrefix("reject") }
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            HStack(spacing: Spacing.sm) {
                 Image(systemName: diff.existedBefore ? "pencil.line" : "doc.badge.plus")
                     .foregroundStyle(.tint)
                 VStack(alignment: .leading, spacing: 2) {
@@ -198,8 +198,8 @@ struct ComposePanel: View {
                 isApplying: false
             )
             .frame(minHeight: 320, idealHeight: 420, maxHeight: 540)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.2)))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+            .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.secondary.opacity(0.2)))
 
             HStack {
                 Spacer()
@@ -210,7 +210,7 @@ struct ComposePanel: View {
                 .foregroundStyle(.secondary)
             }
         }
-        .padding(20)
+        .padding(Spacing.lg + Spacing.xs)
         .frame(minWidth: 640, idealWidth: 820, maxWidth: 1100)
         .accessibilityLabel("Approve change to \(fileName)")
     }
@@ -229,7 +229,7 @@ struct ComposePanel: View {
 
     private var agentPickerEmptyState: some View {
         ZStack(alignment: .topTrailing) {
-            VStack(spacing: 12) {
+            VStack(spacing: Spacing.md) {
                 Image(systemName: "sparkles")
                     .font(.largeTitle)
                     .foregroundStyle(.tertiary)
@@ -249,7 +249,7 @@ struct ComposePanel: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             closeButton
-                .padding(12)
+                .padding(Spacing.md)
         }
     }
 
@@ -265,7 +265,7 @@ struct ComposePanel: View {
                 }
                 .font(.callout)
             } else if agentId.toolSource.cliBinaryURL == nil {
-                VStack(spacing: 8) {
+                VStack(spacing: Spacing.sm) {
                     Text("\(agentId.displayName) isn't installed.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
@@ -276,7 +276,7 @@ struct ComposePanel: View {
                     .controlSize(.regular)
                 }
             } else if let error = agent?.lastError {
-                VStack(spacing: 8) {
+                VStack(spacing: Spacing.sm) {
                     Text(error)
                         .font(.callout)
                         .foregroundStyle(.red)
@@ -305,7 +305,7 @@ struct ComposePanel: View {
 
     private var noToolsConfiguredView: some View {
         ZStack(alignment: .topTrailing) {
-            VStack(spacing: 16) {
+            VStack(spacing: Spacing.lg) {
                 Image(systemName: "sparkles")
                     .font(.largeTitle)
                     .foregroundStyle(.tertiary)
@@ -332,25 +332,25 @@ struct ComposePanel: View {
                             .labelsHidden()
                             .disabled(agentId.toolSource.cliBinaryURL == nil)
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, Spacing.md)
+                        .padding(.vertical, Spacing.sm)
                     }
                 }
                 .background(Color.primary.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
                 .frame(maxWidth: 320)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             closeButton
-                .padding(12)
+                .padding(Spacing.md)
         }
     }
 
     private var topBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Spacing.sm) {
             // LEFT: Tool picker + connection + debug
-            HStack(spacing: 8) {
+            HStack(spacing: Spacing.sm) {
                 Picker("", selection: $selectedAgentId) {
                     Text("Select...").tag(nil as String?)
                     ForEach(configuredAgents) { agentId in
@@ -358,7 +358,7 @@ struct ComposePanel: View {
                     }
                 }
                 .labelsHidden()
-                .frame(width: 120)
+                .frame(minWidth: 120)
 
                 connectionButton
                 debugLogButton
@@ -381,8 +381,8 @@ struct ComposePanel: View {
 
             closeButton
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
         .background(Color(.controlBackgroundColor))
     }
 
@@ -401,7 +401,7 @@ struct ComposePanel: View {
             let bubbleWidth = max(200, floor(geo.size.width * ComposeConstants.bubbleWidthRatio))
             ScrollViewReader { proxy in
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 12) {
+                    LazyVStack(alignment: .leading, spacing: Spacing.md) {
                         if messages.isEmpty && !isProcessing {
                             if isConnected {
                                 connectedPlaceholder
@@ -421,7 +421,7 @@ struct ComposePanel: View {
                                 .id("live-assistant")
                         }
                     }
-                    .padding(12)
+                    .padding(Spacing.md)
                 }
                 .background(Color(.textBackgroundColor).opacity(0.5))
                 .onChange(of: messages.count) { _, _ in
@@ -444,7 +444,7 @@ struct ComposePanel: View {
     }
 
     private var disconnectedPlaceholder: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Spacing.md) {
             Image(systemName: "sparkles")
                 .font(.largeTitle)
                 .foregroundStyle(.tertiary)
@@ -463,7 +463,7 @@ struct ComposePanel: View {
     }
 
     private var connectedPlaceholder: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Spacing.sm) {
             Text("Describe what you'd like to change")
                 .font(.callout)
                 .foregroundStyle(.secondary)
@@ -524,8 +524,8 @@ struct ComposePanel: View {
             }
             .frame(maxWidth: bubbleWidth, alignment: .leading)
             .background(Color.primary.opacity(0.09))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.2)))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+            .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.secondary.opacity(0.2)))
         }
     }
 
@@ -536,7 +536,7 @@ struct ComposePanel: View {
                 ActivityRow(activity: activity)
             }
             if waitingOnUser {
-                HStack(spacing: 8) {
+                HStack(spacing: Spacing.sm) {
                     Image(systemName: "hand.raised.fill")
                         .foregroundStyle(.orange)
                         .frame(width: 14, alignment: .center)
@@ -606,9 +606,9 @@ struct ComposePanel: View {
                         .font(.body)
                         .textSelection(.enabled)
                         .padding(.horizontal, 10)
-                        .padding(.vertical, 7)
+                        .padding(.vertical, Spacing.sm)
                         .background(Color.accentColor.opacity(0.32))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
                         .frame(maxWidth: bubbleWidth, alignment: .trailing)
                 }
             case .assistant:
@@ -666,9 +666,9 @@ struct ComposePanel: View {
         // Use a primary-relative tint so the card is visibly distinct from the window
         // background in both light and dark mode (controlBackgroundColor is too similar).
         .background(message.isError ? Color.orange.opacity(0.08) : Color.primary.opacity(0.09))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: Radius.lg)
                 .stroke(message.isError ? Color.orange.opacity(0.35) : Color.secondary.opacity(0.2))
         )
     }
@@ -702,9 +702,9 @@ struct ComposePanel: View {
                 onReject: { rejectDiff(messageId: messageId, diffIndex: diffIndex) },
                 isApplying: applyingDiffID == diffActionID(messageId: messageId, diffIndex: diffIndex)
             )
-            .frame(height: 260)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.2)))
+            .frame(minHeight: 200, idealHeight: 260, maxHeight: 360)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+            .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.secondary.opacity(0.2)))
         }
     }
 
@@ -715,7 +715,7 @@ struct ComposePanel: View {
     }
 
     private var inputArea: some View {
-        HStack(alignment: .bottom, spacing: 8) {
+        HStack(alignment: .bottom, spacing: Spacing.sm) {
             TextField(isFirstTurn ? "Enter instructions…" : "Follow up…", text: $inputText, axis: .vertical)
                 .font(.body)
                 .textFieldStyle(.plain)
@@ -727,8 +727,8 @@ struct ComposePanel: View {
                 .padding(.horizontal, 8)
                 .padding(.vertical, 8)
                 .background(Color(.textBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.25)))
+                .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+                .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.secondary.opacity(0.25)))
 
             if isProcessing {
                 Button {
@@ -740,7 +740,7 @@ struct ComposePanel: View {
                         .frame(width: 36)
                         .frame(maxHeight: .infinity)
                         .background(Color.red.opacity(0.8))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
                 }
                 .buttonStyle(.plain)
                 .help("Stop (⌘.)")
@@ -756,7 +756,7 @@ struct ComposePanel: View {
                         .frame(width: 36)
                         .frame(maxHeight: .infinity)
                         .background(sendDisabled ? Color.accentColor.opacity(0.4) : Color.accentColor)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
                 }
                 .buttonStyle(.plain)
                 .disabled(sendDisabled)
@@ -766,8 +766,8 @@ struct ComposePanel: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
         .background(Color(.controlBackgroundColor))
     }
 
@@ -818,7 +818,8 @@ struct ComposePanel: View {
                 if isConnecting {
                     ProgressView().controlSize(.mini)
                 } else {
-                    Image(systemName: "link")
+                    // Fill (connected) vs outline (disconnected) so state reads without relying on color.
+                    Image(systemName: isConnected ? "link.circle.fill" : "link.circle")
                         .foregroundStyle(isConnected ? .green : .red)
                 }
             }

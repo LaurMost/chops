@@ -46,7 +46,12 @@ struct ContentView: View {
         .onChange(of: appState.sidebarFilter) {
             appState.toolKindFilter = nil
         }
-        .frame(minWidth: 900, minHeight: 500)
+        .frame(
+            minWidth: Sizing.windowMinWidth,
+            idealWidth: Sizing.windowIdealWidth,
+            minHeight: Sizing.windowMinHeight,
+            idealHeight: Sizing.windowIdealHeight
+        )
         .onReceive(NotificationCenter.default.publisher(for: .customScanPathsChanged)) { _ in
             scanner?.scanAll()
         }

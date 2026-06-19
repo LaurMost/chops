@@ -131,7 +131,7 @@ struct NewSkillSheet: View {
                 Text(filesystemError ?? "")
             }
         }
-        .frame(minWidth: 400, idealWidth: 440)
+        .frame(minWidth: 400, idealWidth: Sizing.sheetNarrow)
         .onAppear {
             if !creatableTools.contains(selectedTool) {
                 selectedTool = creatableTools.first ?? .claude

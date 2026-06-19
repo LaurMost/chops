@@ -32,6 +32,16 @@ struct SkillDetailView: View {
     @State private var showingComposePanel = false
     @ScaledMetric(relativeTo: .body) private var composeButtonSize: CGFloat = 36
 
+    /// Bottom gutter reserved in the editor so text scrolls clear of the floating
+    /// compose button (button height + its padding + breathing room).
+    private static let composeButtonClearance: CGFloat = 36 + Spacing.lg + Spacing.sm
+
+    /// The floating compose button shows for editable content when the inline
+    /// compose panel is closed (over both the editor and the preview).
+    private var showsComposeButton: Bool {
+        !showingComposePanel && !skill.isReadOnly
+    }
+
     var body: some View {
         @Bindable var document = document
 
@@ -40,13 +50,21 @@ struct SkillDetailView: View {
                 if preferPreview {
                     SkillPreviewView(content: document.editorContent)
                 } else {
-                    SkillEditorView(document: document, isEditable: !skill.isReadOnly)
+                    SkillEditorView(
+                        document: document,
+                        isEditable: !skill.isReadOnly,
+                        bottomContentInset: showsComposeButton ? Self.composeButtonClearance : Spacing.sm
+                    )
                 }
 
-                if !showingComposePanel && !skill.isReadOnly {
+                if showsComposeButton {
                     composeFloatingButton
+                        .zIndex(Layering.floatingAction)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(minHeight: Sizing.editorMinHeight)
+            .layoutPriority(1)
 
             // Inline compose panel
             if showingComposePanel {
@@ -220,13 +238,13 @@ struct SkillDetailView: View {
                 .foregroundStyle(Color(nsColor: .alternateSelectedControlTextColor))
                 .frame(width: composeButtonSize, height: composeButtonSize)
                 .background(Circle().fill(Color.accentColor))
-                .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+                .shadow(color: .black.opacity(0.25), radius: Radius.sm, y: 2)
         }
         .buttonStyle(.plain)
         .pointerStyle(.link)
         .help("Compose with AI")
         .accessibilityLabel("Compose with AI")
-        .padding(16)
+        .padding(Spacing.lg)
     }
 
     private func makeSkillGlobal() {

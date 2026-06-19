@@ -55,9 +55,9 @@ struct SettingsView: View {
                     }
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 8)
-            .padding(.bottom, 4)
+            .padding(.horizontal, Spacing.md)
+            .padding(.top, Spacing.sm)
+            .padding(.bottom, Spacing.xs)
 
             Divider()
 
@@ -65,7 +65,7 @@ struct SettingsView: View {
             tabContent
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: 520)
+        .frame(minWidth: Sizing.settingsWidth, idealWidth: Sizing.settingsWidth)
         .fixedSize(horizontal: false, vertical: true)
         .onAppear {
             loadCustomPaths()
@@ -91,7 +91,7 @@ struct SettingsView: View {
     }
 
     private var generalSettings: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("General")
                 .font(.headline)
 
@@ -106,7 +106,7 @@ struct SettingsView: View {
     }
 
     private var scanSettings: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Custom Scan Directories")
                 .font(.headline)
 
@@ -145,7 +145,7 @@ struct SettingsView: View {
                     }
                 }
                 .background(Color(NSColor.controlBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             } else {
                 Text("No custom directories added.")
                     .foregroundStyle(.secondary)
@@ -173,7 +173,7 @@ struct SettingsView: View {
     }
 
     private var aboutView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.lg) {
             if let icon = NSApp.applicationIconImage {
                 Image(nsImage: icon)
                     .resizable()
@@ -193,7 +193,7 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            HStack(spacing: 16) {
+            HStack(spacing: Spacing.lg) {
                 Button("Check for Updates") {
                     updater.checkForUpdates()
                 }
@@ -257,7 +257,7 @@ private struct SettingsTabButton: View {
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .background(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 6))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

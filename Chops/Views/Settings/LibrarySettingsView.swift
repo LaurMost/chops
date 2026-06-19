@@ -11,8 +11,8 @@ struct LibrarySettingsView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
                 Text("Editor")
                     .font(.headline)
                 Stepper(
@@ -28,7 +28,7 @@ struct LibrarySettingsView: View {
 
             Divider()
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
                 Text("Plugin skills")
                     .font(.headline)
                 Text("Plugin skills are installed by a tool's marketplace and are read-only. Enable a tool to list its plugin skills in the library.")
@@ -41,7 +41,7 @@ struct LibrarySettingsView: View {
                         .foregroundStyle(.tertiary)
                         .padding(.top, 2)
                 } else {
-                    VStack(spacing: 8) {
+                    VStack(spacing: Spacing.sm) {
                         ForEach(eligiblePluginTools) { tool in
                             PluginToggleRow(tool: tool)
                         }

@@ -188,6 +188,9 @@ final class SkillEditorDocument {
 struct SkillEditorView: View {
     @Bindable var document: SkillEditorDocument
     var isEditable: Bool = true
+    /// Extra space reserved at the bottom of the scroll content so the last lines
+    /// can scroll clear of the floating compose button.
+    var bottomContentInset: CGFloat = 0
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -198,10 +201,14 @@ struct SkillEditorView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                HighlightedTextEditor(text: $document.editorContent, isEditable: isEditable)
+                HighlightedTextEditor(
+                    text: $document.editorContent,
+                    isEditable: isEditable,
+                    bottomContentInset: bottomContentInset
+                )
             }
 
-            HStack(spacing: 6) {
+            HStack(spacing: Spacing.xs + Spacing.xxs) {
                 if document.isSavingRemote {
                     ProgressView()
                         .controlSize(.small)
@@ -210,7 +217,7 @@ struct SkillEditorView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .padding(12)
+            .padding(Spacing.md)
         }
     }
 }
@@ -226,6 +233,7 @@ extension Notification.Name {
 struct HighlightedTextEditor: NSViewRepresentable {
     @Binding var text: String
     var isEditable: Bool = true
+    var bottomContentInset: CGFloat = 0
     @Environment(\.colorScheme) private var colorScheme
     @AppStorage("editorFontSize") private var editorFontSize: Double = Double(EditorTheme.defaultEditorFontSize)
 
@@ -239,6 +247,9 @@ struct HighlightedTextEditor: NSViewRepresentable {
         scrollView.hasHorizontalScroller = false
         scrollView.drawsBackground = false
         scrollView.autohidesScrollers = true
+        // Reserve a bottom gutter so the last lines scroll clear of the floating compose button.
+        scrollView.automaticallyAdjustsContentInsets = false
+        scrollView.contentInsets = NSEdgeInsets(top: 0, left: 0, bottom: bottomContentInset, right: 0)
 
         let textView = ChopsTextView()
         textView.isEditable = isEditable
@@ -267,7 +278,9 @@ struct HighlightedTextEditor: NSViewRepresentable {
             .baselineOffset: EditorTheme.editorBaselineOffset,
         ]
 
-        // Insets
+        // Insets — cap the text column to a readable line length and center it on wide windows.
+        textView.baseHorizontalInset = EditorTheme.editorInsetX
+        textView.readingMaxWidth = Sizing.readingMaxWidth
         textView.textContainerInset = NSSize(width: EditorTheme.editorInsetX, height: EditorTheme.editorInsetTop)
         textView.textContainer?.lineFragmentPadding = 0
 
@@ -302,6 +315,10 @@ struct HighlightedTextEditor: NSViewRepresentable {
 
         context.coordinator.parent = self
         textView.isEditable = isEditable
+
+        if abs(scrollView.contentInsets.bottom - bottomContentInset) > 0.5 {
+            scrollView.contentInsets = NSEdgeInsets(top: 0, left: 0, bottom: bottomContentInset, right: 0)
+        }
 
         // Re-apply font/colors when the appearance or the editor font-size
         // preference changes, then re-highlight.

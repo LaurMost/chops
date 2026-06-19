@@ -43,14 +43,14 @@ private struct ToolOverviewRow: View {
     let onSelect: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.md) {
             ToolIcon(tool: tool, size: 24)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(tool.displayName)
                     .fontWeight(.medium)
 
-                HStack(spacing: 8) {
+                HStack(spacing: Spacing.sm) {
                     if skillCount > 0 {
                         Text("\(skillCount) skill\(skillCount == 1 ? "" : "s")")
                             .font(.caption)
