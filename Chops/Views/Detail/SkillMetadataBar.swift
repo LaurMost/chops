@@ -179,6 +179,8 @@ struct SkillMetadataBar: View {
                     .padding(.horizontal, 4)
                 }
                 .buttonStyle(.plain)
+                .accessibilityValue(isAssigned ? "Assigned" : "Not assigned")
+                .accessibilityAddTraits(isAssigned ? .isSelected : [])
             }
             if allCollections.isEmpty {
                 Text("No collections yet")

@@ -86,9 +86,11 @@ private struct ServerRow: View {
                     case .success:
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
+                            .accessibilityLabel("Connection succeeded")
                     case .failure:
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.red)
+                            .accessibilityLabel("Connection failed")
                     }
                 }
 
@@ -130,6 +132,8 @@ private struct ServerRow: View {
                         .foregroundStyle(.red)
                 }
                 .buttonStyle(.plain)
+                .help("Delete server")
+                .accessibilityLabel("Delete server \(server.label)")
             }
 
             if let error = server.lastSyncError {
@@ -137,6 +141,7 @@ private struct ServerRow: View {
                     .font(.caption)
                     .foregroundStyle(.red)
                     .textSelection(.enabled)
+                    .accessibilityLabel("Sync error: \(error)")
             }
 
             if let log = syncLog {

@@ -9,6 +9,7 @@ struct GlobalSearchView: View {
     @State private var query: String = ""
     @State private var toolFilter: ToolSource?
     @State private var kindFilter: ItemKind?
+    @FocusState private var searchFocused: Bool
 
     private var results: [Skill] {
         var skills = allSkills
@@ -39,9 +40,11 @@ struct GlobalSearchView: View {
             HStack(spacing: Spacing.sm) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 TextField("Search all skills…", text: $query)
                     .textFieldStyle(.plain)
                     .font(.title3)
+                    .focused($searchFocused)
                     .onSubmit {
                         if let first = results.first {
                             navigate(to: first)
@@ -55,6 +58,8 @@ struct GlobalSearchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
+                    .help("Clear search")
+                    .accessibilityLabel("Clear search")
                 }
             }
             .padding(.horizontal, 16)
@@ -122,6 +127,8 @@ struct GlobalSearchView: View {
         }
         .frame(minWidth: Sizing.sheetWide, idealWidth: Sizing.sheetWide)
         .background(.regularMaterial)
+        .onAppear { searchFocused = true }
+        .onExitCommand { dismiss() }
     }
 
     private func navigate(to skill: Skill) {
@@ -155,11 +162,16 @@ private struct FilterChip: View {
                 .font(.caption)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(isActive ? Color.accentColor : Color.secondary.opacity(0.15),
-                            in: Capsule())
-                .foregroundStyle(isActive ? .white : .primary)
+                .background(
+                    isActive
+                        ? Color(nsColor: .selectedContentBackgroundColor)
+                        : Color.secondary.opacity(0.15),
+                    in: Capsule()
+                )
+                .foregroundStyle(isActive ? Color(nsColor: .alternateSelectedControlTextColor) : .primary)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isActive ? .isSelected : [])
     }
 }
 
@@ -188,10 +200,20 @@ private struct SearchResultRow: View {
 
             HStack(spacing: 4) {
                 ForEach(skill.toolSources.prefix(3), id: \.self) { tool in
-                    ToolIcon(tool: tool, size: 12)
+                    ToolIcon(tool: tool, size: 12, decorative: true)
                 }
             }
         }
         .padding(.vertical, 2)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(rowAccessibilityLabel)
+    }
+
+    private var rowAccessibilityLabel: String {
+        var parts: [String] = [skill.name, skill.itemKind.singularName]
+        if !skill.skillDescription.isEmpty { parts.append(skill.skillDescription) }
+        let tools = skill.toolSources.prefix(3).map(\.displayName)
+        if !tools.isEmpty { parts.append("installed in \(tools.joined(separator: ", "))") }
+        return parts.joined(separator: ", ")
     }
 }

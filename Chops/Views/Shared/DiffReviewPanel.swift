@@ -137,6 +137,7 @@ struct DiffReviewPanel: View {
         HStack(spacing: 10) {
             Image(systemName: "plusminus")
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
 
             Text("+\(addedCount)")
                 .font(.caption.monospaced())

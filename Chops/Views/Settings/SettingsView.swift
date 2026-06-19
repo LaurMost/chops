@@ -119,6 +119,7 @@ struct SettingsView: View {
                     ForEach(customPaths, id: \.self) { path in
                         HStack {
                             Image(systemName: "folder")
+                                .accessibilityHidden(true)
                             Text(path)
                                 .font(.system(.body, design: .monospaced))
                                 .lineLimit(1)
@@ -132,6 +133,8 @@ struct SettingsView: View {
                                     .foregroundStyle(.red)
                             }
                             .buttonStyle(.plain)
+                            .help("Remove directory")
+                            .accessibilityLabel("Remove directory \(path)")
                         }
                         .padding(.vertical, 6)
                         .padding(.horizontal, 8)
@@ -238,13 +241,14 @@ private struct SettingsTabButton: View {
     let tab: SettingsTab
     let isSelected: Bool
     let action: () -> Void
+    @ScaledMetric(relativeTo: .body) private var iconSize: CGFloat = 16
 
     var body: some View {
         Button(action: action) {
             VStack(spacing: 2) {
                 Image(systemName: tab.icon)
-                    .font(.system(size: 16))
-                    .frame(height: 20)
+                    .font(.system(size: iconSize))
+                    .frame(height: iconSize + 4)
                 Text(tab.title)
                     .font(.caption2)
                     .lineLimit(1)
@@ -258,5 +262,7 @@ private struct SettingsTabButton: View {
         }
         .buttonStyle(.plain)
         .foregroundStyle(isSelected ? .primary : .secondary)
+        .accessibilityLabel(tab.title)
+        .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 }

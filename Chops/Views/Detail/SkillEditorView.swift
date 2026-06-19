@@ -235,6 +235,7 @@ struct HighlightedTextEditor: NSViewRepresentable {
     var isEditable: Bool = true
     var bottomContentInset: CGFloat = 0
     @Environment(\.colorScheme) private var colorScheme
+    @AppStorage("editorFontSize") private var editorFontSize: Double = Double(EditorTheme.defaultEditorFontSize)
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -319,15 +320,21 @@ struct HighlightedTextEditor: NSViewRepresentable {
             scrollView.contentInsets = NSEdgeInsets(top: 0, left: 0, bottom: bottomContentInset, right: 0)
         }
 
-        // Re-highlight on appearance change
+        // Re-apply font/colors when the appearance or the editor font-size
+        // preference changes, then re-highlight.
         let currentScheme = colorScheme
-        if context.coordinator.lastColorScheme != currentScheme {
+        if context.coordinator.lastColorScheme != currentScheme
+            || context.coordinator.lastFontSize != editorFontSize {
             context.coordinator.lastColorScheme = currentScheme
+            context.coordinator.lastFontSize = editorFontSize
+            textView.font = EditorTheme.editorFont
             textView.insertionPointColor = EditorTheme.textColor
+            textView.textContainerInset = NSSize(width: EditorTheme.editorInsetX, height: EditorTheme.editorInsetTop)
 
             let paragraph = NSMutableParagraphStyle()
             paragraph.minimumLineHeight = EditorTheme.editorLineHeight
             paragraph.maximumLineHeight = EditorTheme.editorLineHeight
+            textView.defaultParagraphStyle = paragraph
             textView.typingAttributes = [
                 .font: EditorTheme.editorFont,
                 .foregroundColor: EditorTheme.textColor,
@@ -362,6 +369,7 @@ struct HighlightedTextEditor: NSViewRepresentable {
         var highlighter: MarkdownSyntaxHighlighter?
         weak var textView: ChopsTextView?
         var lastColorScheme: ColorScheme?
+        var lastFontSize: Double?
 
         init(_ parent: HighlightedTextEditor) {
             self.parent = parent

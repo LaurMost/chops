@@ -30,6 +30,7 @@ struct SkillDetailView: View {
     @State private var activeAlert: ActiveAlert?
     @State private var autoSaveTask: Task<Void, Never>?
     @State private var showingComposePanel = false
+    @ScaledMetric(relativeTo: .body) private var composeButtonSize: CGFloat = 36
 
     /// Bottom gutter reserved in the editor so text scrolls clear of the floating
     /// compose button (button height + its padding + breathing room).
@@ -121,10 +122,16 @@ struct SkillDetailView: View {
         .toolbar {
             ToolbarItem {
                 Picker("Mode", selection: $preferPreview) {
-                    Image(systemName: "pencil").tag(false)
-                    Image(systemName: "eye").tag(true)
+                    Image(systemName: "pencil")
+                        .accessibilityLabel("Edit")
+                        .tag(false)
+                    Image(systemName: "eye")
+                        .accessibilityLabel("Preview")
+                        .tag(true)
                 }
                 .pickerStyle(.segmented)
+                .accessibilityLabel("Editor mode")
+                .accessibilityValue(preferPreview ? "Preview" : "Edit")
             }
             ToolbarItem {
                 Button {
@@ -135,7 +142,9 @@ struct SkillDetailView: View {
                         .foregroundStyle(skill.isFavorite ? .yellow : .secondary)
                 }
                 .help(skill.isFavorite ? "Unfavorite" : "Favorite")
-                .accessibilityLabel(skill.isFavorite ? "Unfavorite" : "Favorite")
+                .accessibilityLabel("Favorite")
+                .accessibilityValue(skill.isFavorite ? "On" : "Off")
+                .accessibilityAddTraits(skill.isFavorite ? .isSelected : [])
             }
             if !skill.isRemote {
                 ToolbarItem {
@@ -225,9 +234,9 @@ struct SkillDetailView: View {
             showingComposePanel.toggle()
         } label: {
             Image(systemName: "sparkles")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(width: 36, height: 36)
+                .font(.system(size: composeButtonSize * 0.39, weight: .semibold))
+                .foregroundStyle(Color(nsColor: .alternateSelectedControlTextColor))
+                .frame(width: composeButtonSize, height: composeButtonSize)
                 .background(Circle().fill(Color.accentColor))
                 .shadow(color: .black.opacity(0.25), radius: Radius.sm, y: 2)
         }

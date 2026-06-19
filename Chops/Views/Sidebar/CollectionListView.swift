@@ -166,6 +166,7 @@ struct CollectionListView: View {
 
                 LazyVGrid(columns: Array(repeating: GridItem(.fixed(28)), count: 6), spacing: Spacing.sm) {
                     ForEach(availableIcons, id: \.self) { icon in
+                        let isSelected = newCollectionIcon == icon
                         Button {
                             newCollectionIcon = icon
                         } label: {
@@ -173,13 +174,18 @@ struct CollectionListView: View {
                                 .font(.body)
                                 .frame(width: 28, height: 28)
                                 .background(
-                                    newCollectionIcon == icon ?
-                                        Color.accentColor.opacity(0.2) :
-                                        Color.clear,
+                                    isSelected ? Color.accentColor.opacity(0.25) : Color.clear,
                                     in: RoundedRectangle(cornerRadius: Radius.sm)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: Radius.sm)
+                                        .strokeBorder(Color.accentColor, lineWidth: isSelected ? 2 : 0)
                                 )
                         }
                         .buttonStyle(.plain)
+                        .help("\(icon) icon")
+                        .accessibilityLabel("\(icon) icon")
+                        .accessibilityAddTraits(isSelected ? .isSelected : [])
                     }
                 }
 

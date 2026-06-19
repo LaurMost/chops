@@ -33,6 +33,7 @@ struct AgentLogViewer: View {
                 }
                 .buttonStyle(.borderless)
                 .help("Refresh")
+                .accessibilityLabel("Refresh logs")
 
                 Button {
                     agentLog.clearLogs()
@@ -42,6 +43,7 @@ struct AgentLogViewer: View {
                 }
                 .buttonStyle(.borderless)
                 .help("Clear Logs")
+                .accessibilityLabel("Clear logs")
 
                 Button {
                     NSWorkspace.shared.selectFile(agentLog.logURL.path, inFileViewerRootedAtPath: "")
@@ -50,6 +52,7 @@ struct AgentLogViewer: View {
                 }
                 .buttonStyle(.borderless)
                 .help("Show in Finder")
+                .accessibilityLabel("Show logs in Finder")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -67,7 +70,7 @@ struct AgentLogViewer: View {
                         .id("bottom")
                 }
                 .onChange(of: logContent) { _, _ in
-                    withAnimation {
+                    withMotion {
                         proxy.scrollTo("bottom", anchor: .bottom)
                     }
                 }

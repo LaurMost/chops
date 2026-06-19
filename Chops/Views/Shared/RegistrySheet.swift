@@ -26,7 +26,7 @@ struct RegistrySheet: View {
             HStack {
                 if selectedSkill != nil {
                     Button {
-                        withAnimation {
+                        withMotion {
                             contentTask?.cancel()
                             selectedSkill = nil
                             skillContent = nil
@@ -87,6 +87,7 @@ struct RegistrySheet: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 TextField("Search skills (e.g. react, testing, deploy)...", text: $searchText)
                     .textFieldStyle(.plain)
                 if isSearching {
@@ -203,26 +204,33 @@ struct RegistrySheet: View {
                                     .foregroundStyle(.secondary)
                             } else {
                                 ForEach(installedAgents) { agent in
-                                    HStack(spacing: Spacing.sm) {
-                                        Image(systemName: selectedAgents.contains(agent.id) ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(selectedAgents.contains(agent.id) ? .accentColor : .secondary)
-                                            .font(.system(size: 14))
-
-                                        Text(agent.displayName)
-                                            .font(.system(size: 12))
-
-                                        Spacer()
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        if selectedAgents.contains(agent.id) {
+                                    let isSelected = selectedAgents.contains(agent.id)
+                                    Button {
+                                        if isSelected {
                                             selectedAgents.remove(agent.id)
                                         } else {
                                             selectedAgents.insert(agent.id)
                                         }
+                                    } label: {
+                                        HStack(spacing: Spacing.sm) {
+                                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                                                .foregroundColor(isSelected ? .accentColor : .secondary)
+                                                .imageScale(.medium)
+                                                .accessibilityHidden(true)
+
+                                            Text(agent.displayName)
+                                                .font(.callout)
+
+                                            Spacer()
+                                        }
+                                        .contentShape(Rectangle())
+                                        .padding(.vertical, Spacing.xs)
+                                        .padding(.horizontal, Spacing.xs)
                                     }
-                                    .padding(.vertical, Spacing.xs)
-                                    .padding(.horizontal, Spacing.xs)
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(agent.displayName)
+                                    .accessibilityValue(isSelected ? "Selected" : "Not selected")
+                                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                                 }
                             }
                         }

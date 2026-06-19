@@ -269,6 +269,8 @@ struct SkillListView: View {
                         } label: {
                             Image(systemName: appState.toolKindFilter != nil ? "ellipsis.circle.fill" : "ellipsis.circle")
                         }
+                        .accessibilityLabel("Filter by type")
+                        .accessibilityValue(appState.toolKindFilter?.displayName ?? "All")
                     }
                     Menu {
                         Button {
@@ -299,6 +301,7 @@ struct SkillListView: View {
                         Image(systemName: "plus")
                     }
                     .menuIndicator(.hidden)
+                    .accessibilityLabel("New item")
                 }
             }
         }
@@ -408,7 +411,7 @@ struct SkillRow: View {
                     .padding(.horizontal, Spacing.xs + Spacing.xxs / 2)
                     .padding(.vertical, 1)
                     .background(.quaternary, in: Capsule())
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary)
                     .help(pluginChipTooltip(package: package))
             }
 
@@ -433,12 +436,30 @@ struct SkillRow: View {
 
             HStack(spacing: 3) {
                 ForEach(skill.toolSources, id: \.self) { tool in
-                    ToolIcon(tool: tool, size: 14)
+                    ToolIcon(tool: tool, size: 14, decorative: true)
                         .help(tool.displayName)
                         .opacity(0.75)
                 }
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(rowAccessibilityLabel)
+    }
+
+    private var rowAccessibilityLabel: String {
+        var parts: [String] = [skill.name, skill.displayTypeName]
+        if skill.isFavorite { parts.append("Favorite") }
+        if skill.isReadOnly { parts.append("Read-only") }
+        if skill.isRemote, let serverLabel = skill.remoteServer?.label {
+            parts.append("on \(serverLabel)")
+        } else if let project = skill.projectName {
+            parts.append("in \(project)")
+        }
+        let tools = skill.toolSources.map(\.displayName)
+        if !tools.isEmpty {
+            parts.append("installed in \(tools.joined(separator: ", "))")
+        }
+        return parts.joined(separator: ", ")
     }
 }
