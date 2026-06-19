@@ -425,18 +425,18 @@ struct ComposePanel: View {
                 }
                 .background(Color(.textBackgroundColor).opacity(0.5))
                 .onChange(of: messages.count) { _, _ in
-                    withAnimation { proxy.scrollTo("live-assistant", anchor: .bottom) }
+                    withMotion { proxy.scrollTo("live-assistant", anchor: .bottom) }
                 }
                 .onChange(of: isProcessing) { _, active in
                     if active {
-                        withAnimation { proxy.scrollTo("live-assistant", anchor: .bottom) }
+                        withMotion { proxy.scrollTo("live-assistant", anchor: .bottom) }
                     } else if let last = messages.last {
-                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                        withMotion { proxy.scrollTo(last.id, anchor: .bottom) }
                     }
                 }
                 .onChange(of: agent?.currentActivity) { _, _ in
                     if isProcessing {
-                        withAnimation { proxy.scrollTo("live-assistant", anchor: .bottom) }
+                        withMotion { proxy.scrollTo("live-assistant", anchor: .bottom) }
                     }
                 }
             }

@@ -26,7 +26,7 @@ struct RegistrySheet: View {
             HStack {
                 if selectedSkill != nil {
                     Button {
-                        withAnimation {
+                        withMotion {
                             contentTask?.cancel()
                             selectedSkill = nil
                             skillContent = nil
@@ -82,6 +82,7 @@ struct RegistrySheet: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 TextField("Search skills (e.g. react, testing, deploy)...", text: $searchText)
                     .textFieldStyle(.plain)
                 if isSearching {
@@ -200,26 +201,33 @@ struct RegistrySheet: View {
                         ScrollView {
                             VStack(spacing: 0) {
                                 ForEach(installedAgents) { agent in
-                                    HStack(spacing: 8) {
-                                        Image(systemName: selectedAgents.contains(agent.id) ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(selectedAgents.contains(agent.id) ? .accentColor : .secondary)
-                                            .font(.system(size: 14))
-
-                                        Text(agent.displayName)
-                                            .font(.system(size: 12))
-
-                                        Spacer()
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        if selectedAgents.contains(agent.id) {
+                                    let isSelected = selectedAgents.contains(agent.id)
+                                    Button {
+                                        if isSelected {
                                             selectedAgents.remove(agent.id)
                                         } else {
                                             selectedAgents.insert(agent.id)
                                         }
+                                    } label: {
+                                        HStack(spacing: 8) {
+                                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                                                .foregroundColor(isSelected ? .accentColor : .secondary)
+                                                .imageScale(.medium)
+                                                .accessibilityHidden(true)
+
+                                            Text(agent.displayName)
+                                                .font(.callout)
+
+                                            Spacer()
+                                        }
+                                        .contentShape(Rectangle())
+                                        .padding(.vertical, 4)
+                                        .padding(.horizontal, 4)
                                     }
-                                    .padding(.vertical, 4)
-                                    .padding(.horizontal, 4)
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel(agent.displayName)
+                                    .accessibilityValue(isSelected ? "Selected" : "Not selected")
+                                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                                 }
                             }
                         }

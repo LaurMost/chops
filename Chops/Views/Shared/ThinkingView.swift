@@ -13,18 +13,20 @@ struct ThinkingView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) { isExpanded.toggle() }
+                withMotion(.easeInOut(duration: 0.2)) { isExpanded.toggle() }
             } label: {
                 HStack(spacing: 5) {
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
                     if !settled {
                         ProgressView().controlSize(.mini)
                     } else {
                         Image(systemName: "brain")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                     }
                     Text("Thinking")
                         .font(.caption)
@@ -36,6 +38,7 @@ struct ThinkingView: View {
             .buttonStyle(.plain)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
+            .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
 
             if isExpanded {
                 ScrollView(.vertical) {
@@ -62,7 +65,7 @@ struct ThinkingView: View {
         .onChange(of: isStreaming) { _, streaming in
             if !streaming {
                 settled = true
-                withAnimation(.easeInOut(duration: 0.3)) { isExpanded = false }
+                withMotion(.easeInOut(duration: 0.3)) { isExpanded = false }
             }
         }
     }

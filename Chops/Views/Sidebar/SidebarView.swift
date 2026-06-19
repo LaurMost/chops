@@ -99,21 +99,26 @@ struct SidebarView: View {
                             Spacer()
 
                             if let error = serverErrors[server.id] {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .font(.caption)
-                                    .foregroundStyle(.red)
-                                    .popover(isPresented: Binding(
-                                        get: { showingErrorForServer == server.id },
-                                        set: { if !$0 { showingErrorForServer = nil } }
-                                    )) {
-                                        Text(error)
-                                            .font(.caption)
-                                            .padding()
-                                            .frame(maxWidth: 250)
-                                    }
-                                    .onTapGesture {
-                                        showingErrorForServer = server.id
-                                    }
+                                Button {
+                                    showingErrorForServer = server.id
+                                } label: {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.red)
+                                }
+                                .buttonStyle(.plain)
+                                .help(error)
+                                .accessibilityLabel("Sync error for \(server.label)")
+                                .accessibilityHint("Shows the error details")
+                                .popover(isPresented: Binding(
+                                    get: { showingErrorForServer == server.id },
+                                    set: { if !$0 { showingErrorForServer = nil } }
+                                )) {
+                                    Text(error)
+                                        .font(.caption)
+                                        .padding()
+                                        .frame(maxWidth: 250)
+                                }
                             }
 
                             Button {
@@ -131,6 +136,7 @@ struct SidebarView: View {
                             .buttonStyle(.plain)
                             .help("Sync skills from server")
                             .accessibilityLabel("Sync \(server.label)")
+                            .accessibilityValue(syncingServerIDs.contains(server.id) ? "Syncing" : "")
                             .disabled(syncingServerIDs.contains(server.id))
                         }
                         .badge(server.skills.count)
