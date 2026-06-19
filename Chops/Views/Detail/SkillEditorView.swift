@@ -81,13 +81,7 @@ final class SkillEditorDocument {
             fullFileContent = editorContent
             hasUnsavedChanges = false
 
-            let parsed = FrontmatterParser.parse(editorContent)
-            if !parsed.name.isEmpty {
-                skill.name = parsed.name
-            }
-            skill.skillDescription = parsed.description
-            skill.content = parsed.content
-            skill.frontmatter = parsed.frontmatter
+            skill.apply(FrontmatterParser.parse(editorContent))
 
             let attrs = try? FileManager.default.attributesOfItem(atPath: skill.filePath)
             skill.fileModifiedDate = (attrs?[.modificationDate] as? Date) ?? skill.fileModifiedDate
@@ -163,13 +157,7 @@ final class SkillEditorDocument {
                 hasUnsavedChanges = false
                 isSavingRemote = false
 
-                let parsed = FrontmatterParser.parse(editorContent)
-                if !parsed.name.isEmpty {
-                    skill.name = parsed.name
-                }
-                skill.skillDescription = parsed.description
-                skill.content = parsed.content
-                skill.frontmatter = parsed.frontmatter
+                skill.apply(FrontmatterParser.parse(editorContent))
                 skill.fileModifiedDate = .now
                 skill.fileSize = editorContent.utf8.count
             } catch {

@@ -21,6 +21,9 @@ packages:
   cmark-gfm:
     url: https://github.com/brokenhandsio/cmark-gfm.git
     from: "2.1.0"
+  Yams:
+    url: https://github.com/jpsim/Yams
+    from: "6.2.2"
 
 targets:
   Chops:
@@ -36,6 +39,7 @@ targets:
       - package: Highlightr
       - package: cmark-gfm
         product: cmark
+      - package: Yams
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.joshpigford.Chops

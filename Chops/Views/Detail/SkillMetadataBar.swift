@@ -8,8 +8,83 @@ struct SkillMetadataBar: View {
     @State private var showingCollectionPicker = false
     @State private var installError: String?
     @State private var showingInstallError = false
+    @State private var computedDirectorySize: Int?
+
+    private var validationIssues: [ValidationIssue] { skill.specValidationIssues }
+
+    private var hasSpecInfo: Bool {
+        !validationIssues.isEmpty
+            || skill.license != nil
+            || skill.compatibility != nil
+            || skill.allowedTools != nil
+            || !skill.metadata.isEmpty
+    }
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if hasSpecInfo {
+                specInfoStrip
+                Divider()
+            }
+            mainBar
+        }
+        .background(.bar)
+        .task(id: skill.filePath) {
+            computedDirectorySize = await directorySize()
+        }
+    }
+
+    // MARK: - Spec info strip
+
+    private var specInfoStrip: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            ForEach(validationIssues) { issue in
+                Label(issue.message, systemImage: "exclamationmark.triangle")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+            }
+
+            if hasOptionalFields {
+                HStack(spacing: Spacing.md) {
+                    if let license = skill.license { fieldChip("License", license) }
+                    if let compatibility = skill.compatibility { fieldChip("Compatibility", compatibility) }
+                    if let allowedTools = skill.allowedTools { fieldChip("Allowed tools", allowedTools) }
+                    ForEach(metadataPairs, id: \.0) { key, value in
+                        fieldChip(key, value)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
+    }
+
+    private var hasOptionalFields: Bool {
+        skill.license != nil || skill.compatibility != nil || skill.allowedTools != nil || !skill.metadata.isEmpty
+    }
+
+    private var metadataPairs: [(String, String)] {
+        skill.metadata.sorted { $0.key < $1.key }.map { ($0.key, $0.value) }
+    }
+
+    private func fieldChip(_ label: String, _ value: String) -> some View {
+        HStack(spacing: Spacing.xs) {
+            Text(label)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.caption2)
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.xxs)
+        .background(.quaternary, in: RoundedRectangle(cornerRadius: Radius.sm))
+    }
+
+    private var mainBar: some View {
         HStack(spacing: Spacing.md) {
             // Tool icons — clicking shows installed paths
             HStack(spacing: 6) {
@@ -118,7 +193,6 @@ struct SkillMetadataBar: View {
         }
         .padding(.horizontal, Spacing.md)
         .padding(.vertical, Spacing.sm)
-        .background(.bar)
     }
 
     private var displayPath: String {
@@ -135,7 +209,30 @@ struct SkillMetadataBar: View {
     }
 
     private var formattedSize: String {
-        ByteCountFormatter.string(fromByteCount: Int64(skill.fileSize), countStyle: .file)
+        ByteCountFormatter.string(fromByteCount: Int64(computedDirectorySize ?? skill.fileSize), countStyle: .file)
+    }
+
+    /// Total on-disk size of a directory-backed skill (SKILL.md plus all bundled
+    /// resources), computed off the main thread. Single-file and remote skills
+    /// fall back to the stored `fileSize`.
+    private func directorySize() async -> Int {
+        guard !skill.isRemote, skill.isDirectory else { return skill.fileSize }
+        let directory = URL(fileURLWithPath: skill.filePath).deletingLastPathComponent()
+        return await Task.detached {
+            let fm = FileManager.default
+            var total = 0
+            guard let enumerator = fm.enumerator(
+                at: directory,
+                includingPropertiesForKeys: [.fileSizeKey, .isRegularFileKey]
+            ) else { return 0 }
+            for case let url as URL in enumerator {
+                let values = try? url.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey])
+                if values?.isRegularFile == true {
+                    total += values?.fileSize ?? 0
+                }
+            }
+            return total
+        }.value
     }
 
     private var installedPathsSummary: String {

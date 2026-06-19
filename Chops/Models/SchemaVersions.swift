@@ -40,6 +40,7 @@ enum SchemaV1: VersionedSchema {
             skillDescription: String = "",
             content: String = "",
             frontmatter: [String: String] = [:],
+            metadata: [String: String] = [:],
             collections: [SkillCollection] = [],
             isFavorite: Bool = false,
             lastOpened: Date? = nil,
@@ -57,7 +58,7 @@ enum SchemaV1: VersionedSchema {
             self.name = name
             self.skillDescription = skillDescription
             self.content = content
-            frontmatterData = try? JSONEncoder().encode(frontmatter)
+            frontmatterData = try? JSONEncoder().encode(SkillFrontmatter(scalars: frontmatter, metadata: metadata))
             self.collections = collections
             self.isFavorite = isFavorite
             self.lastOpened = lastOpened

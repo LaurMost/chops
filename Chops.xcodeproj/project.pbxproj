@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		038F5975DA97A3211EF4D448 /* ThinkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D07C2CD05E172DB71F63033 /* ThinkingView.swift */; };
+		08E113A92317E8C669EE5440 /* SkillSpecValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1184F75AD4FF102B41E3A8 /* SkillSpecValidatorTests.swift */; };
 		09D3F065191A83BDEE922789 /* SkillDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168E103488DEA623E712852B /* SkillDetailView.swift */; };
+		0A70EB067228B3AFE05B951F /* SkillSpecValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B823F1C6E719FFBA7C7E /* SkillSpecValidator.swift */; };
 		0AED62EB9C82E6B7C86392A4 /* ActivityRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125B3A8A0094D3BF9E068E75 /* ActivityRow.swift */; };
 		0D24C25D8EF2753D3B4779F1 /* AgentLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E8381274A1590717831053 /* AgentLogger.swift */; };
 		0F66ACF4862BE349F3C99B03 /* AgentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EF85EE8B243A6EBF7BC0EA /* AgentFactory.swift */; };
@@ -26,6 +28,7 @@
 		5A3580B4B7E9BCBC0801B096 /* ClaudeCLIAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A790BF6E4978D4BAC6ACCF /* ClaudeCLIAgent.swift */; };
 		5B81DED237A60776ADB04134 /* RemoteServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3314080A44DEB895223E36D5 /* RemoteServer.swift */; };
 		60A6711BAB0C3B8A3ACBF985 /* SkillParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155D141EF812A3FE9ADF59C /* SkillParser.swift */; };
+		648A23D640A5D864988D94EA /* SkillFileOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0C2FECCCE7C9217C8ED86E /* SkillFileOperationsTests.swift */; };
 		648FAE1AD9C0589BECECC8CB /* SkillPluginOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D59940D6F3CE4003ED9B7F /* SkillPluginOriginTests.swift */; };
 		6A8E0927D95BB14C9F377F4E /* SkillScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A5B26D335C1AFB6CDE8207 /* SkillScanner.swift */; };
 		6E02BA7498763274DD403CD0 /* DiffReviewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B955C8B935BD62ED4811FCA2 /* DiffReviewPanel.swift */; };
@@ -39,7 +42,9 @@
 		801A39D725B59A2F2BAF5DF2 /* cmark in Frameworks */ = {isa = PBXBuildFile; productRef = 9F4BE66CFE1E8401894FEF1F /* cmark */; };
 		82A3B6608A09239EE8F4C7C9 /* AgentConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C7BFA21B0740FF884FA01F /* AgentConfiguration.swift */; };
 		846B58F3B105D1734DC6FA75 /* SkillRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC9D3E83D8640CC258CF361 /* SkillRegistry.swift */; };
+		853DE1E2966C0705E577EFF6 /* FilesColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C6B4E22F75C162F3DDD963 /* FilesColumnView.swift */; };
 		87A469B631CC80C89B14B1C7 /* SkillMetadataBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C812515FD8DC222B89745F2 /* SkillMetadataBar.swift */; };
+		87AEE95EAD9793D3241D4387 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = D81E7B9EFB5B154ACBDC4F49 /* Yams */; };
 		8A79338409FBFF22A6267407 /* OneShotResponseParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60020771472734209832C3BC /* OneShotResponseParserTests.swift */; };
 		91EA572FCA75A2EA848C3429 /* ChopsTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A58EBE34E8A678FC897DFCB /* ChopsTextView.swift */; };
 		95163AEB7980654C901EC693 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6ED655F951177D2152351 /* Skill.swift */; };
@@ -63,16 +68,20 @@
 		C7E9572C9C26D5B3165566C9 /* SkillParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */; };
 		CBD8FECF1C5A453C8B021665 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C77C5B30E6C885B39444E5B /* FrontmatterParser.swift */; };
 		CCD92CB102DFA0965D6AFDB5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF7822031FD82A28978D9C5 /* SidebarView.swift */; };
+		CCFD6FB39784ABA94BC0A0E0 /* SkillDirectoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8714FA104F2311F94B7ACD18 /* SkillDirectoryServiceTests.swift */; };
+		CDAAF3A8408445CB9F0416B2 /* BundledFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD31125A92014C1CF984301 /* BundledFileView.swift */; };
 		CECE9BEEC1D933C543B66A4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17F7FE50C96124BA4EE43A6F /* Assets.xcassets */; };
 		D4C107BE303FC07CAF9C66AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0F71982C4AF0045962380 /* ContentView.swift */; };
 		D910229B5BE2075CB2BC1B1E /* AgentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3116880190EF088AE3B6DC67 /* AgentSession.swift */; };
 		DB4BC5ADE77C4233954C98C9 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740B10E69C9C96C8606D04A2 /* DesignSystem.swift */; };
 		E1FD1568AB10FD56BE84F73B /* GlobalSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C624DF2481CC74BD569A75 /* GlobalSearchView.swift */; };
+		E43281FD24BF9D9F0C0E4B18 /* SkillFileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9530D69962085B669752F5 /* SkillFileOperations.swift */; };
 		E46A2BA5FA20531A06AFB418 /* ComposeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CAA9B98C7A69F32C6950710 /* ComposeModel.swift */; };
 		E6F4E1CF50F2F78F5BA9BAC9 /* SkillPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E332B9970E6E3D00DCFBA3 /* SkillPreviewView.swift */; };
 		E7ED248D6F94C1B1DEF1E8BA /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372FA72F2C179B79470DF86A /* MarkdownRenderer.swift */; };
 		E98F7490B18A194F82ED2C0E /* SkillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA64A368BBF950CD36C4F495 /* SkillListView.swift */; };
 		F3C287FC674757B173CFA164 /* FrontmatterParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */; };
+		F405B92B49CF5CE3BC4118AF /* SkillDirectoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DDB8946ED8A3703E5FDD78B /* SkillDirectoryService.swift */; };
 		F54A42D63F72E619FB051F9D /* AgentLogViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C32D91C01AA0A0D63D00ED /* AgentLogViewer.swift */; };
 		F6EBFD8F2B9E42AF8E156946 /* AgentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D7755BBA1F48D7E3F2ACE /* AgentTypes.swift */; };
 		F98B1E8579B139FD2A801650 /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC47BDE92105F4736B379F /* SearchService.swift */; };
@@ -96,7 +105,9 @@
 		02EF85EE8B243A6EBF7BC0EA /* AgentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentFactory.swift; sourceTree = "<group>"; };
 		0377DFEA592B9CFECCCEE0F3 /* AgentTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentTypesTests.swift; sourceTree = "<group>"; };
 		03AA4FA049E1DADB40552060 /* LibrarySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySettingsView.swift; sourceTree = "<group>"; };
+		0405B823F1C6E719FFBA7C7E /* SkillSpecValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillSpecValidator.swift; sourceTree = "<group>"; };
 		04C3C644B72DD508A7CBC403 /* ChopsIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = ChopsIcon.icon; sourceTree = "<group>"; };
+		0C0C2FECCCE7C9217C8ED86E /* SkillFileOperationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillFileOperationsTests.swift; sourceTree = "<group>"; };
 		0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParserTests.swift; sourceTree = "<group>"; };
 		11C624DF2481CC74BD569A75 /* GlobalSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSearchView.swift; sourceTree = "<group>"; };
 		125B3A8A0094D3BF9E068E75 /* ActivityRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRow.swift; sourceTree = "<group>"; };
@@ -118,11 +129,13 @@
 		372FA72F2C179B79470DF86A /* MarkdownRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
 		3A4F680B33C74A38FCF5ADD5 /* MDCParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDCParser.swift; sourceTree = "<group>"; };
 		3B1E367B7ADB2972827F12BD /* ChopsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChopsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B9530D69962085B669752F5 /* SkillFileOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillFileOperations.swift; sourceTree = "<group>"; };
 		3C6B997C722E5E4F3ECE3877 /* WizardTemplateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardTemplateType.swift; sourceTree = "<group>"; };
 		3CD5E41FB46E550A2F56E881 /* CodexCLIAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexCLIAgent.swift; sourceTree = "<group>"; };
 		3D23D43EC788E51ED1C265FE /* StoreBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreBootstrap.swift; sourceTree = "<group>"; };
 		424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillParserTests.swift; sourceTree = "<group>"; };
 		4CA102A49ACFB23BC15794F8 /* CollectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionListView.swift; sourceTree = "<group>"; };
+		4DDB8946ED8A3703E5FDD78B /* SkillDirectoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillDirectoryService.swift; sourceTree = "<group>"; };
 		5155D141EF812A3FE9ADF59C /* SkillParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillParser.swift; sourceTree = "<group>"; };
 		5487D9027B97F7E9EE9A1F4A /* ToolSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolSource.swift; sourceTree = "<group>"; };
 		5CAA9B98C7A69F32C6950710 /* ComposeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeModel.swift; sourceTree = "<group>"; };
@@ -130,12 +143,15 @@
 		60E0F71982C4AF0045962380 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		62DAB83F8E24DF7E0BB19F76 /* OneShotResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneShotResponseParser.swift; sourceTree = "<group>"; };
 		6797D4AC1970DB9ACB5ACA73 /* SSHService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHService.swift; sourceTree = "<group>"; };
+		6AD31125A92014C1CF984301 /* BundledFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledFileView.swift; sourceTree = "<group>"; };
+		70C6B4E22F75C162F3DDD963 /* FilesColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesColumnView.swift; sourceTree = "<group>"; };
 		740B10E69C9C96C8606D04A2 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		77E332B9970E6E3D00DCFBA3 /* SkillPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPreviewView.swift; sourceTree = "<group>"; };
 		7C77C5B30E6C885B39444E5B /* FrontmatterParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParser.swift; sourceTree = "<group>"; };
 		7FCD6C2A8BE68F553A9CA392 /* RegistrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrySheet.swift; sourceTree = "<group>"; };
 		7FFC47BDE92105F4736B379F /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		8645C0C1581E22DB66C88164 /* SkillInstallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillInstallTests.swift; sourceTree = "<group>"; };
+		8714FA104F2311F94B7ACD18 /* SkillDirectoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillDirectoryServiceTests.swift; sourceTree = "<group>"; };
 		8A58EBE34E8A678FC897DFCB /* ChopsTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChopsTextView.swift; sourceTree = "<group>"; };
 		8C812515FD8DC222B89745F2 /* SkillMetadataBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillMetadataBar.swift; sourceTree = "<group>"; };
 		907E59B064AB8366B60BF611 /* AgentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentTarget.swift; sourceTree = "<group>"; };
@@ -162,6 +178,7 @@
 		D5D3C2567FBF8DBA4DE957B3 /* DiagnosticExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticExporter.swift; sourceTree = "<group>"; };
 		E684304D1723CA691F40335B /* RemoteServersSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServersSettingsView.swift; sourceTree = "<group>"; };
 		E6A5B26D335C1AFB6CDE8207 /* SkillScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillScanner.swift; sourceTree = "<group>"; };
+		EC1184F75AD4FF102B41E3A8 /* SkillSpecValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillSpecValidatorTests.swift; sourceTree = "<group>"; };
 		F02A00F80E4712872205EA7B /* NewSkillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSkillSheet.swift; sourceTree = "<group>"; };
 		F45D5C8E8C732B2F4A867E43 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 		F8C32D91C01AA0A0D63D00ED /* AgentLogViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentLogViewer.swift; sourceTree = "<group>"; };
@@ -175,6 +192,7 @@
 				331F55021A7E6C9F0B666514 /* Sparkle in Frameworks */,
 				791AA125E9170DBA81BCBE62 /* Highlightr in Frameworks */,
 				801A39D725B59A2F2BAF5DF2 /* cmark in Frameworks */,
+				87AEE95EAD9793D3241D4387 /* Yams in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,9 +299,12 @@
 				F45D5C8E8C732B2F4A867E43 /* AppLogger.swift */,
 				CAD26AA4787A2E0CDC86AADC /* FileWatcher.swift */,
 				7FFC47BDE92105F4736B379F /* SearchService.swift */,
+				4DDB8946ED8A3703E5FDD78B /* SkillDirectoryService.swift */,
+				3B9530D69962085B669752F5 /* SkillFileOperations.swift */,
 				5155D141EF812A3FE9ADF59C /* SkillParser.swift */,
 				9FC9D3E83D8640CC258CF361 /* SkillRegistry.swift */,
 				E6A5B26D335C1AFB6CDE8207 /* SkillScanner.swift */,
+				0405B823F1C6E719FFBA7C7E /* SkillSpecValidator.swift */,
 				6797D4AC1970DB9ACB5ACA73 /* SSHService.swift */,
 				3D23D43EC788E51ED1C265FE /* StoreBootstrap.swift */,
 				12C5CD1627D4EFF58AEF4F71 /* TemplateManager.swift */,
@@ -337,8 +358,10 @@
 		96A2A820C082754BBFB0237D /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				6AD31125A92014C1CF984301 /* BundledFileView.swift */,
 				8A58EBE34E8A678FC897DFCB /* ChopsTextView.swift */,
 				D24B049638C76AC6248FD5D2 /* EditorTheme.swift */,
+				70C6B4E22F75C162F3DDD963 /* FilesColumnView.swift */,
 				135976FA0E8358E099157DE1 /* MarkdownSyntaxHighlighter.swift */,
 				168E103488DEA623E712852B /* SkillDetailView.swift */,
 				31B4DB87833D5160A11E39C9 /* SkillEditorView.swift */,
@@ -354,9 +377,12 @@
 				0377DFEA592B9CFECCCEE0F3 /* AgentTypesTests.swift */,
 				0D2D54243E8B616066257B0A /* FrontmatterParserTests.swift */,
 				60020771472734209832C3BC /* OneShotResponseParserTests.swift */,
+				8714FA104F2311F94B7ACD18 /* SkillDirectoryServiceTests.swift */,
+				0C0C2FECCCE7C9217C8ED86E /* SkillFileOperationsTests.swift */,
 				8645C0C1581E22DB66C88164 /* SkillInstallTests.swift */,
 				424DEA8E65C3C9F830DAC35D /* SkillParserTests.swift */,
 				14D59940D6F3CE4003ED9B7F /* SkillPluginOriginTests.swift */,
+				EC1184F75AD4FF102B41E3A8 /* SkillSpecValidatorTests.swift */,
 				98EF4978934812160BD71201 /* ToolSourceTests.swift */,
 			);
 			path = ChopsTests;
@@ -433,6 +459,7 @@
 				4338FC540625A275BBC9AAC9 /* Sparkle */,
 				704A14702546BFBD29BE27A8 /* Highlightr */,
 				9F4BE66CFE1E8401894FEF1F /* cmark */,
+				D81E7B9EFB5B154ACBDC4F49 /* Yams */,
 			);
 			productName = Chops;
 			productReference = B3F5CF5BB1FC8455FDDB004A /* Chops.app */;
@@ -461,6 +488,7 @@
 			packageReferences = (
 				7FA62842E4E9A8FD27AE24AF /* XCRemoteSwiftPackageReference "Highlightr" */,
 				FD1D69AB767CC40E2CE9FED9 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				341572A9F1963B641F9347B9 /* XCRemoteSwiftPackageReference "Yams" */,
 				05A6F59368DE6489DCD607F1 /* XCRemoteSwiftPackageReference "cmark-gfm" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -503,6 +531,7 @@
 				F6EBFD8F2B9E42AF8E156946 /* AgentTypes.swift in Sources */,
 				A99BA179E0520DCDC98E1382 /* AppLogger.swift in Sources */,
 				25A4FB387DB5BD96DB630C14 /* AppState.swift in Sources */,
+				CDAAF3A8408445CB9F0416B2 /* BundledFileView.swift in Sources */,
 				309B12E0B72A22C9772BBC99 /* ChopsApp.swift in Sources */,
 				A500A6E37C3F2BF5B4428959 /* ChopsSettings.swift in Sources */,
 				91EA572FCA75A2EA848C3429 /* ChopsTextView.swift in Sources */,
@@ -518,6 +547,7 @@
 				6E02BA7498763274DD403CD0 /* DiffReviewPanel.swift in Sources */,
 				B4526ECE136AC044CD3C7603 /* EditorTheme.swift in Sources */,
 				99EE8F6124FE91AC9576D6FD /* FileWatcher.swift in Sources */,
+				853DE1E2966C0705E577EFF6 /* FilesColumnView.swift in Sources */,
 				CBD8FECF1C5A453C8B021665 /* FrontmatterParser.swift in Sources */,
 				E1FD1568AB10FD56BE84F73B /* GlobalSearchView.swift in Sources */,
 				A0862ECC573FDC0AA7CB9950 /* LibrarySettingsView.swift in Sources */,
@@ -537,13 +567,16 @@
 				CCD92CB102DFA0965D6AFDB5 /* SidebarView.swift in Sources */,
 				95163AEB7980654C901EC693 /* Skill.swift in Sources */,
 				09D3F065191A83BDEE922789 /* SkillDetailView.swift in Sources */,
+				F405B92B49CF5CE3BC4118AF /* SkillDirectoryService.swift in Sources */,
 				FB295303DD30AED03290C726 /* SkillEditorView.swift in Sources */,
+				E43281FD24BF9D9F0C0E4B18 /* SkillFileOperations.swift in Sources */,
 				E98F7490B18A194F82ED2C0E /* SkillListView.swift in Sources */,
 				87A469B631CC80C89B14B1C7 /* SkillMetadataBar.swift in Sources */,
 				60A6711BAB0C3B8A3ACBF985 /* SkillParser.swift in Sources */,
 				E6F4E1CF50F2F78F5BA9BAC9 /* SkillPreviewView.swift in Sources */,
 				846B58F3B105D1734DC6FA75 /* SkillRegistry.swift in Sources */,
 				6A8E0927D95BB14C9F377F4E /* SkillScanner.swift in Sources */,
+				0A70EB067228B3AFE05B951F /* SkillSpecValidator.swift in Sources */,
 				C2A028F40A1C665D29495DB6 /* StoreBootstrap.swift in Sources */,
 				3F0ED402E77D8D25C600BAED /* TemplateManager.swift in Sources */,
 				038F5975DA97A3211EF4D448 /* ThinkingView.swift in Sources */,
@@ -562,9 +595,12 @@
 				7EEB581F248352B4D15CF159 /* AgentTypesTests.swift in Sources */,
 				F3C287FC674757B173CFA164 /* FrontmatterParserTests.swift in Sources */,
 				8A79338409FBFF22A6267407 /* OneShotResponseParserTests.swift in Sources */,
+				CCFD6FB39784ABA94BC0A0E0 /* SkillDirectoryServiceTests.swift in Sources */,
+				648A23D640A5D864988D94EA /* SkillFileOperationsTests.swift in Sources */,
 				B6283195C8128ACD023F893D /* SkillInstallTests.swift in Sources */,
 				C7E9572C9C26D5B3165566C9 /* SkillParserTests.swift in Sources */,
 				648FAE1AD9C0589BECECC8CB /* SkillPluginOriginTests.swift in Sources */,
+				08E113A92317E8C669EE5440 /* SkillSpecValidatorTests.swift in Sources */,
 				FA0BF32541AC568B488FAA79 /* ToolSourceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -926,6 +962,14 @@
 				minimumVersion = 2.1.0;
 			};
 		};
+		341572A9F1963B641F9347B9 /* XCRemoteSwiftPackageReference "Yams" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jpsim/Yams";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.2;
+			};
+		};
 		7FA62842E4E9A8FD27AE24AF /* XCRemoteSwiftPackageReference "Highlightr" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/raspu/Highlightr";
@@ -959,6 +1003,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 05A6F59368DE6489DCD607F1 /* XCRemoteSwiftPackageReference "cmark-gfm" */;
 			productName = cmark;
+		};
+		D81E7B9EFB5B154ACBDC4F49 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 341572A9F1963B641F9347B9 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

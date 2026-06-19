@@ -119,11 +119,82 @@ final class FrontmatterParserTests: XCTestCase {
         XCTAssertEqual(result.name, "")
     }
 
-    func testLineWithoutColonIsIgnored() {
+    func testBareLineMakesBlockInvalidAndFallsBack() {
+        // A bare word is invalid YAML; the lenient parser can't repair it, so it
+        // returns the no-frontmatter result rather than guessing — but never
+        // drops the body.
         let text = "---\nname: Valid\nnocolon\n---\nContent"
         let result = FrontmatterParser.parse(text)
-        XCTAssertEqual(result.frontmatter["name"], "Valid")
-        XCTAssertNil(result.frontmatter["nocolon"])
+        XCTAssertEqual(result.frontmatter, [:])
+        XCTAssertEqual(result.content, "Content")
+    }
+
+    // MARK: - Spec fields (Yams)
+
+    func testNestedMetadataRoundTrips() {
+        let text = """
+        ---
+        name: my-skill
+        description: Does a thing
+        metadata:
+          author: Alice
+          version: "1.0"
+        ---
+        Body
+        """
+        let result = FrontmatterParser.parse(text)
+        XCTAssertEqual(result.metadata["author"], "Alice")
+        // No quote artifacts left on the value.
+        XCTAssertEqual(result.metadata["version"], "1.0")
+        // Nested keys do not leak into the flat top-level contract.
+        XCTAssertNil(result.frontmatter["author"])
+        XCTAssertNil(result.frontmatter["version"])
+        XCTAssertEqual(result.frontmatter["name"], "my-skill")
+    }
+
+    func testQuotedScalarHasNoQuoteArtifacts() {
+        let text = "---\nname: my-skill\nversion: \"1.0\"\n---\nBody"
+        let result = FrontmatterParser.parse(text)
+        XCTAssertEqual(result.frontmatter["version"], "1.0")
+    }
+
+    func testBlockScalarDescriptionParsesFully() {
+        let text = """
+        ---
+        name: pdf-tools
+        description: |
+          Use this skill when working with PDFs.
+          It supports extraction and merging.
+        ---
+        Body
+        """
+        let result = FrontmatterParser.parse(text)
+        XCTAssertTrue(result.description.contains("working with PDFs"))
+        XCTAssertTrue(result.description.contains("extraction and merging"))
+    }
+
+    func testUnquotedColonInValueLoadsViaFallback() {
+        let text = "---\nname: pdf-tools\ndescription: Use when: the user asks about PDFs\n---\nBody"
+        let result = FrontmatterParser.parse(text)
+        XCTAssertEqual(result.description, "Use when: the user asks about PDFs")
+        XCTAssertEqual(result.name, "pdf-tools")
+    }
+
+    func testTypedSpecFieldsAreExposed() {
+        let text = """
+        ---
+        name: my-skill
+        description: Does a thing
+        license: MIT
+        compatibility: Requires network
+        allowed-tools: Bash(git:*) Read
+        ---
+        Body
+        """
+        let result = FrontmatterParser.parse(text)
+        XCTAssertEqual(result.license, "MIT")
+        XCTAssertEqual(result.compatibility, "Requires network")
+        XCTAssertEqual(result.allowedTools, "Bash(git:*) Read")
     }
 
     func testContentIsTrimmedOfLeadingAndTrailingWhitespace() {
