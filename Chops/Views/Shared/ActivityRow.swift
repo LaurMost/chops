@@ -14,6 +14,7 @@ struct ActivityRow: View {
                 HStack(spacing: 8) {
                     statusIcon
                         .frame(width: 14, alignment: .center)
+                        .accessibilityLabel(statusLabel)
                     Text(activity.title)
                         .font(.callout)
                         .foregroundStyle(textColor)
@@ -27,6 +28,7 @@ struct ActivityRow: View {
                         Image(systemName: expanded ? "chevron.down" : "chevron.right")
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
+                            .accessibilityHidden(true)
                     }
                 }
                 .lineLimit(1)
@@ -35,6 +37,8 @@ struct ActivityRow: View {
             }
             .buttonStyle(.plain)
             .disabled(!hasExpandableDetail)
+            .accessibilityValue(hasExpandableDetail ? (expanded ? "Expanded" : "Collapsed") : "")
+            .accessibilityHint(hasExpandableDetail ? "Toggles step details" : "")
 
             if expanded {
                 expandedDetail
@@ -54,6 +58,15 @@ struct ActivityRow: View {
         case .failed: return .red
         case .applied: return .primary
         default: return .primary
+        }
+    }
+
+    private var statusLabel: String {
+        switch activity.status {
+        case .running: return "Running"
+        case .done: return "Done"
+        case .applied: return "Applied to disk"
+        case .failed: return "Failed"
         }
     }
 

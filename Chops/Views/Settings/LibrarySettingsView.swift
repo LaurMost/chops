@@ -3,6 +3,7 @@ import SwiftUI
 /// Settings for the source-of-truth directory used when symlinking library items.
 struct LibrarySettingsView: View {
     @AppStorage("sotDir") private var sotDir = FileManager.default.homeDirectoryForCurrentUser.path + "/.chops"
+    @AppStorage("editorFontSize") private var editorFontSize = Double(EditorTheme.defaultEditorFontSize)
 
     /// Tools that are installed and actually have a plugin cache to scan.
     private var eligiblePluginTools: [ToolSource] {
@@ -11,6 +12,22 @@ struct LibrarySettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Editor")
+                    .font(.headline)
+                Stepper(
+                    value: $editorFontSize,
+                    in: Double(EditorTheme.minEditorFontSize) ... Double(EditorTheme.maxEditorFontSize),
+                    step: 1
+                ) {
+                    Text("Editor font size: \(Int(editorFontSize)) pt")
+                }
+                .accessibilityLabel("Editor font size")
+                .accessibilityValue("\(Int(editorFontSize)) points")
+            }
+
+            Divider()
+
             VStack(alignment: .leading, spacing: 8) {
                 Text("Plugin skills")
                     .font(.headline)

@@ -107,6 +107,10 @@ private struct MarkdownWebView: NSViewRepresentable {
         box-sizing: border-box;
     }
 
+    html {
+        color-scheme: light dark;
+    }
+
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
         font-size: 16px;
@@ -187,10 +191,7 @@ private struct MarkdownWebView: NSViewRepresentable {
     }
 
     a {
-        color: #3366AA;
-        text-decoration: none;
-    }
-    a:hover {
+        color: #1F5FA8;
         text-decoration: underline;
     }
 
@@ -198,7 +199,7 @@ private struct MarkdownWebView: NSViewRepresentable {
         font-family: "SF Mono", SFMono-Regular, Menlo, monospace;
         font-size: 0.85em;
         background-color: #F0F0F0;
-        color: #CC3333;
+        color: #B3261E;
         padding: 0.15em 0.35em;
         border-radius: 3px;
     }
@@ -232,11 +233,11 @@ private struct MarkdownWebView: NSViewRepresentable {
     }
 
     blockquote {
-        border-left: 3px solid #CCCCCC;
+        border-left: 3px solid #BBBBBB;
         padding-left: 1em;
         margin-left: 0;
         margin-bottom: 1em;
-        color: #666666;
+        color: #595959;
         font-style: italic;
     }
 
@@ -291,7 +292,6 @@ private struct MarkdownWebView: NSViewRepresentable {
 
     del {
         text-decoration: line-through;
-        opacity: 0.6;
     }
 
     hr {
@@ -317,6 +317,28 @@ private struct MarkdownWebView: NSViewRepresentable {
         margin-bottom: 24px;
         white-space: pre-wrap;
         word-wrap: break-word;
+    }
+
+    @media (prefers-contrast: more) {
+        body { color: #000000; }
+        a { color: #0B4FA0; text-decoration: underline; }
+        code { color: #8C1D14; background-color: #EAEAEA; }
+        blockquote { color: #333333; border-left-color: #666666; }
+    }
+
+    @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+        body { color: #FFFFFF; }
+        a { color: #8FB8E6; }
+        code { color: #FF9C9C; background-color: #303030; }
+        blockquote { color: #D0D0D0; border-left-color: #888888; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
     }
     """
 }

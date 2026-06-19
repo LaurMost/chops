@@ -34,6 +34,7 @@ struct ToolFilterView: View {
             }
             .buttonStyle(.plain)
             .fontWeight(appState.sidebarFilter == .tool(tool) ? .semibold : .regular)
+            .accessibilityAddTraits(appState.sidebarFilter == .tool(tool) ? .isSelected : [])
         }
     }
 }
