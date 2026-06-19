@@ -8,7 +8,7 @@ struct RemoteServersSettingsView: View {
     @State private var showingAddSheet = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Remote Servers")
                 .font(.headline)
 
@@ -17,7 +17,7 @@ struct RemoteServersSettingsView: View {
                 .foregroundStyle(.secondary)
 
             ScrollView {
-                VStack(spacing: 8) {
+                VStack(spacing: Spacing.sm) {
                     ForEach(servers) { server in
                         ServerRow(server: server)
                         if server.id != servers.last?.id {
@@ -148,7 +148,7 @@ private struct ServerRow: View {
                     .padding(6)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.quaternary.opacity(0.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
             }
         }
         .sheet(isPresented: $showingEditSheet) {
@@ -213,7 +213,7 @@ private struct AddServerSheet: View {
     @State private var testError: String?
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.lg) {
             Text("Add Remote Server")
                 .font(.headline)
 
@@ -261,7 +261,7 @@ private struct AddServerSheet: View {
             }
         }
         .padding()
-        .frame(width: 400)
+        .frame(minWidth: 400, idealWidth: Sizing.sheetNarrow)
     }
 
     private func testConnection() {
@@ -328,7 +328,7 @@ private struct EditServerSheet: View {
     @State private var sshKeyPath: String = ""
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.lg) {
             Text("Edit Server")
                 .font(.headline)
 
@@ -385,7 +385,7 @@ private struct EditServerSheet: View {
             }
         }
         .padding()
-        .frame(width: 400)
+        .frame(minWidth: 400, idealWidth: Sizing.sheetNarrow)
         .onAppear {
             label = server.label
             host = server.host

@@ -5,7 +5,7 @@ struct AgentSettingsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: Spacing.lg) {
                 Text("Enable AI assistants to help compose and improve skills, agents, and rules.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
@@ -19,7 +19,7 @@ struct AgentSettingsView: View {
 
     @ViewBuilder
     private var agentListSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Agents")
                 .font(.headline)
 
@@ -33,7 +33,7 @@ struct AgentSettingsView: View {
             }
             .padding(8)
             .background(Color(NSColor.controlBackgroundColor))
-            .clipShape(RoundedRectangle(cornerRadius: 6))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
         }
     }
 }
@@ -47,8 +47,8 @@ private struct AgentRow: View {
     @State private var localVersion: String?
 
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 2) {
+        HStack(spacing: Spacing.md) {
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(agentId.displayName)
                     .fontWeight(.medium)
                 if localBinaryPath != nil {

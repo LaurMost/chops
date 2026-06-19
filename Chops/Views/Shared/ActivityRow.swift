@@ -11,7 +11,7 @@ struct ActivityRow: View {
             Button {
                 if hasExpandableDetail { expanded.toggle() }
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: Spacing.sm) {
                     statusIcon
                         .frame(width: 14, alignment: .center)
                     Text(activity.title)
@@ -91,8 +91,8 @@ struct ActivityRow: View {
                 isApplying: false
             )
             .frame(minHeight: 200, idealHeight: 280, maxHeight: 360)
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.2)))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+            .overlay(RoundedRectangle(cornerRadius: Radius.md).stroke(Color.secondary.opacity(0.2)))
         } else if let result = p.resultText {
             // Read / Bash / Grep / etc. — surface the tool result.
             ScrollView {
@@ -104,8 +104,8 @@ struct ActivityRow: View {
             }
             .frame(maxHeight: 240)
             .background(Color(.textBackgroundColor).opacity(0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.2)))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+            .overlay(RoundedRectangle(cornerRadius: Radius.md).stroke(Color.secondary.opacity(0.2)))
         } else if let raw = p.rawInput {
             // Fallback: show the raw input JSON.
             ScrollView {
@@ -117,8 +117,8 @@ struct ActivityRow: View {
             }
             .frame(maxHeight: 200)
             .background(Color(.textBackgroundColor).opacity(0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.2)))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+            .overlay(RoundedRectangle(cornerRadius: Radius.md).stroke(Color.secondary.opacity(0.2)))
         }
     }
 }

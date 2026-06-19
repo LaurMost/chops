@@ -10,7 +10,7 @@ struct SkillMetadataBar: View {
     @State private var showingInstallError = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.md) {
             // Tool icons — clicking shows installed paths
             HStack(spacing: 6) {
                 ForEach(skill.toolSources) { tool in
@@ -116,8 +116,8 @@ struct SkillMetadataBar: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
         .background(.bar)
     }
 

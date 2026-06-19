@@ -152,7 +152,7 @@ struct CollectionListView: View {
         }
         .buttonStyle(.plain)
         .popover(isPresented: $showingNewCollection) {
-            VStack(spacing: 12) {
+            VStack(spacing: Spacing.md) {
                 TextField("Collection name", text: $newCollectionName)
                     .textFieldStyle(.roundedBorder)
                     .submitLabel(.done)
@@ -164,7 +164,7 @@ struct CollectionListView: View {
                         .foregroundStyle(.red)
                 }
 
-                LazyVGrid(columns: Array(repeating: GridItem(.fixed(28)), count: 6), spacing: 8) {
+                LazyVGrid(columns: Array(repeating: GridItem(.fixed(28)), count: 6), spacing: Spacing.sm) {
                     ForEach(availableIcons, id: \.self) { icon in
                         Button {
                             newCollectionIcon = icon
@@ -176,7 +176,7 @@ struct CollectionListView: View {
                                     newCollectionIcon == icon ?
                                         Color.accentColor.opacity(0.2) :
                                         Color.clear,
-                                    in: RoundedRectangle(cornerRadius: 4)
+                                    in: RoundedRectangle(cornerRadius: Radius.sm)
                                 )
                         }
                         .buttonStyle(.plain)

@@ -36,7 +36,7 @@ struct GlobalSearchView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 8) {
+            HStack(spacing: Spacing.sm) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
                 TextField("Search all skills…", text: $query)
@@ -120,7 +120,7 @@ struct GlobalSearchView: View {
                 .frame(maxHeight: 360)
             }
         }
-        .frame(width: 560)
+        .frame(minWidth: Sizing.sheetWide, idealWidth: Sizing.sheetWide)
         .background(.regularMaterial)
     }
 
@@ -167,7 +167,7 @@ private struct SearchResultRow: View {
     let skill: Skill
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Spacing.sm) {
             Image(systemName: skill.itemKind.icon)
                 .font(.caption)
                 .foregroundStyle(.secondary)

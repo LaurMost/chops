@@ -63,7 +63,12 @@ struct RegistrySheet: View {
                 searchView
             }
         }
-        .frame(width: 560, height: 500)
+        .frame(
+            minWidth: Sizing.sheetWide,
+            idealWidth: Sizing.sheetWide,
+            minHeight: Sizing.sheetTallHeight,
+            idealHeight: Sizing.sheetTallHeight
+        )
         .onAppear {
             // Pre-select all installed agents
             selectedAgents = Set(installedAgents.map(\.id))
@@ -91,7 +96,7 @@ struct RegistrySheet: View {
             }
             .padding(10)
             .background(.quaternary.opacity(0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .onChange(of: searchText) { _, newValue in
@@ -155,52 +160,50 @@ struct RegistrySheet: View {
                 ProgressView("Loading skill content...")
                 Spacer()
             } else if let content = skillContent {
-                // Content preview
+                // Single scroll region: content preview + agent selection share one scroller
+                // so they don't fight each other. The install footer below stays fixed.
                 ScrollView {
-                    Text(content)
-                        .font(.system(.caption, design: .monospaced))
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(16)
-                }
-                .frame(maxHeight: 200)
-                .background(.quaternary.opacity(0.3))
+                    VStack(alignment: .leading, spacing: Spacing.lg) {
+                        // Content preview
+                        Text(content)
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(Spacing.md)
+                            .background(.quaternary.opacity(0.3))
+                            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
 
-                Divider()
+                        // Agent selection
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            HStack {
+                                Text("Install to:")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
 
-                // Agent selection
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Install to:")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
+                                Spacer()
 
-                        Spacer()
-
-                        if !installedAgents.isEmpty {
-                            let allSelected = selectedAgents.count == installedAgents.count
-                            Button(allSelected ? "Deselect All" : "Select All") {
-                                if allSelected {
-                                    selectedAgents.removeAll()
-                                } else {
-                                    selectedAgents = Set(installedAgents.map(\.id))
+                                if !installedAgents.isEmpty {
+                                    let allSelected = selectedAgents.count == installedAgents.count
+                                    Button(allSelected ? "Deselect All" : "Select All") {
+                                        if allSelected {
+                                            selectedAgents.removeAll()
+                                        } else {
+                                            selectedAgents = Set(installedAgents.map(\.id))
+                                        }
+                                    }
+                                    .font(.caption)
+                                    .buttonStyle(.plain)
+                                    .foregroundColor(.accentColor)
                                 }
                             }
-                            .font(.caption)
-                            .buttonStyle(.plain)
-                            .foregroundColor(.accentColor)
-                        }
-                    }
 
-                    if installedAgents.isEmpty {
-                        Text("No supported agents detected on this machine.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ScrollView {
-                            VStack(spacing: 0) {
+                            if installedAgents.isEmpty {
+                                Text("No supported agents detected on this machine.")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            } else {
                                 ForEach(installedAgents) { agent in
-                                    HStack(spacing: 8) {
+                                    HStack(spacing: Spacing.sm) {
                                         Image(systemName: selectedAgents.contains(agent.id) ? "checkmark.circle.fill" : "circle")
                                             .foregroundColor(selectedAgents.contains(agent.id) ? .accentColor : .secondary)
                                             .font(.system(size: 14))
@@ -218,16 +221,15 @@ struct RegistrySheet: View {
                                             selectedAgents.insert(agent.id)
                                         }
                                     }
-                                    .padding(.vertical, 4)
-                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, Spacing.xs)
+                                    .padding(.horizontal, Spacing.xs)
                                 }
                             }
                         }
-                        .frame(maxHeight: 140)
                     }
+                    .padding(.horizontal, Spacing.lg + Spacing.xs)
+                    .padding(.vertical, Spacing.md)
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
 
                 Divider()
 
@@ -261,11 +263,11 @@ struct RegistrySheet: View {
                     .keyboardShortcut(.defaultAction)
                     .disabled(selectedAgents.isEmpty || isInstalling || installSuccess)
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.horizontal, Spacing.lg + Spacing.xs)
+                .padding(.vertical, Spacing.md)
             } else if let error {
                 Spacer()
-                VStack(spacing: 8) {
+                VStack(spacing: Spacing.sm) {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.title2)
                         .foregroundStyle(.secondary)

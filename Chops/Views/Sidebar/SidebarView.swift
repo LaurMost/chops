@@ -102,6 +102,8 @@ struct SidebarView: View {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .font(.caption)
                                     .foregroundStyle(.red)
+                                    .help(error)
+                                    .accessibilityLabel("Sync error: \(error)")
                                     .popover(isPresented: Binding(
                                         get: { showingErrorForServer == server.id },
                                         set: { if !$0 { showingErrorForServer = nil } }

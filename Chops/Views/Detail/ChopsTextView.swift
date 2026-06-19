@@ -1,6 +1,31 @@
 import AppKit
 
 final class ChopsTextView: NSTextView {
+    // MARK: - Reading Width
+
+    /// Caps the editable text column to a comfortable line length and centers it
+    /// in wide windows. `0` disables the cap (text fills available width).
+    var readingMaxWidth: CGFloat = 0
+    /// Minimum horizontal gutter when the view is narrower than `readingMaxWidth`.
+    var baseHorizontalInset: CGFloat = 0
+
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        applyReadingInset()
+    }
+
+    /// Centers and caps the text column by widening the horizontal text-container
+    /// inset on wide windows. With `widthTracksTextView` enabled, the container
+    /// width becomes `bounds.width - 2 * inset`, so this clamps it to `readingMaxWidth`.
+    private func applyReadingInset() {
+        guard readingMaxWidth > 0 else { return }
+        let centeredInset = (bounds.width - readingMaxWidth) / 2
+        let inset = max(baseHorizontalInset, centeredInset)
+        if abs(textContainerInset.width - inset) > 0.5 {
+            textContainerInset = NSSize(width: inset, height: textContainerInset.height)
+        }
+    }
+
     // MARK: - Cursor
 
     override func mouseMoved(with event: NSEvent) {
