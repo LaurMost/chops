@@ -13,3 +13,7 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
 Edit the right-hand column to match whatever vocabulary you actually use.
+
+## Source of truth
+
+The labels themselves (names, colors, descriptions) are defined in [`.github/labels.yml`](../../.github/labels.yml) and kept in sync on GitHub by the [labels workflow](../../.github/workflows/labels.yml). Add or change a label there, not by hand in the GitHub UI.

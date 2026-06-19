@@ -1,0 +1,62 @@
+# Source of truth for this repo's issue/PR labels.
+# Synced to GitHub by .github/workflows/labels.yml on every push to main.
+# Colors are hex without the leading '#'.
+
+# --- Type ---
+- name: bug
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: enhancement
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: documentation
+  color: "0075ca"
+  description: "Improvements or additions to documentation"
+
+- name: question
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: dependencies
+  color: "0366d6"
+  description: "Dependency updates"
+
+# --- Community ---
+- name: good first issue
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: help wanted
+  color: "008672"
+  description: "Extra attention is needed"
+
+- name: duplicate
+  color: "cfd3d7"
+  description: "This issue or pull request already exists"
+
+- name: invalid
+  color: "e4e669"
+  description: "This doesn't seem right"
+
+# --- Triage workflow (see docs/agents/triage-labels.md) ---
+- name: needs-triage
+  color: "fbca04"
+  description: "Maintainer needs to evaluate this issue"
+
+- name: needs-info
+  color: "d4c5f9"
+  description: "Waiting on the reporter for more information"
+
+- name: ready-for-agent
+  color: "0e8a16"
+  description: "Scoped and ready for an agent to implement"
+
+- name: ready-for-human
+  color: "1d76db"
+  description: "Requires human implementation"
+
+- name: wontfix
+  color: "ffffff"
+  description: "This will not be worked on"
