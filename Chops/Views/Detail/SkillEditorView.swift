@@ -2,6 +2,7 @@ import AppKit
 import os
 import SwiftUI
 
+@MainActor
 @Observable
 final class SkillEditorDocument {
     var editorContent: String = "" {
@@ -19,7 +20,7 @@ final class SkillEditorDocument {
 
     private var fullFileContent: String = ""
     private var isLoading = false
-    private var loadTask: Task<Void, Never>?
+    private nonisolated(unsafe) var loadTask: Task<Void, Never>?
     private var loadGeneration = 0
 
     func load(from skill: Skill) {
@@ -63,13 +64,13 @@ final class SkillEditorDocument {
             AppLogger.fileIO.notice("Loaded \(path) in \(String(format: "%.3f", elapsed))s (\(data.count) chars)")
 
             await MainActor.run { [weak self, data] in
-                guard let self, self.loadGeneration == generation else { return }
-                self.editorContent = data
-                self.fullFileContent = data
-                self.isLoading = false
-                self.hasUnsavedChanges = false
-                self.showingSaveError = false
-                self.saveErrorMessage = ""
+                guard let self, loadGeneration == generation else { return }
+                editorContent = data
+                fullFileContent = data
+                isLoading = false
+                hasUnsavedChanges = false
+                showingSaveError = false
+                saveErrorMessage = ""
             }
         }
     }

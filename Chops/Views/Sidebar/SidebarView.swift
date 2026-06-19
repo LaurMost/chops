@@ -57,6 +57,9 @@ struct SidebarView: View {
             }
 
             Section("Tools") {
+                Label("All Tools", systemImage: "square.grid.2x2")
+                    .tag(SidebarFilter.toolsOverview)
+
                 ForEach(activeSources) { tool in
                     Label {
                         Text(tool.displayName)
@@ -127,6 +130,7 @@ struct SidebarView: View {
                             }
                             .buttonStyle(.plain)
                             .help("Sync skills from server")
+                            .accessibilityLabel("Sync \(server.label)")
                             .disabled(syncingServerIDs.contains(server.id))
                         }
                         .badge(server.skills.count)

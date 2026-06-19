@@ -113,12 +113,17 @@ struct ComposePanel: View {
                 permissionSheet(request: request)
             }
         }
-        .alert(item: $diffApplyError) { error in
-            Alert(
-                title: Text("Apply Failed"),
-                message: Text(error.message),
-                dismissButton: .default(Text("OK"))
-            )
+        .alert(
+            "Apply Failed",
+            isPresented: Binding(
+                get: { diffApplyError != nil },
+                set: { if !$0 { diffApplyError = nil } }
+            ),
+            presenting: diffApplyError
+        ) { _ in
+            Button("OK") {}
+        } message: { error in
+            Text(error.message)
         }
     }
 
@@ -739,6 +744,7 @@ struct ComposePanel: View {
                 }
                 .buttonStyle(.plain)
                 .help("Stop (⌘.)")
+                .accessibilityLabel("Stop")
                 .keyboardShortcut(".", modifiers: .command)
             } else {
                 Button {
@@ -756,6 +762,7 @@ struct ComposePanel: View {
                 .disabled(sendDisabled)
                 .keyboardShortcut(.return, modifiers: .command)
                 .help("Send (⌘↩)")
+                .accessibilityLabel("Send")
             }
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -819,6 +826,7 @@ struct ComposePanel: View {
         }
         .buttonStyle(.plain)
         .help(isConnected ? "Disconnect" : isConnecting ? "Cancel connection" : "Connect to \(selectedAgent?.displayName ?? "agent")")
+        .accessibilityLabel(isConnected ? "Disconnect" : "Connect")
         .disabled(selectedAgentId == nil)
     }
 
@@ -833,6 +841,8 @@ struct ComposePanel: View {
         }
         .buttonStyle(.plain)
         .foregroundStyle(.secondary)
+        .help("Close")
+        .accessibilityLabel("Close compose panel")
     }
 
     @ViewBuilder
@@ -846,6 +856,7 @@ struct ComposePanel: View {
             }
             .buttonStyle(.plain)
             .help("View Agent Logs")
+            .accessibilityLabel("View Agent Logs")
             .popover(isPresented: $showingDebugLogs) {
                 AgentLogViewer()
                     .frame(width: 600, height: 400)

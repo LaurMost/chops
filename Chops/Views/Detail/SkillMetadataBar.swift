@@ -6,6 +6,8 @@ struct SkillMetadataBar: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \SkillCollection.sortOrder) private var allCollections: [SkillCollection]
     @State private var showingCollectionPicker = false
+    @State private var installError: String?
+    @State private var showingInstallError = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -57,8 +59,55 @@ struct SkillMetadataBar: View {
             }
             .buttonStyle(.plain)
             .help("Assign to collection")
+            .accessibilityLabel("Assign to collection")
             .popover(isPresented: $showingCollectionPicker) {
                 collectionPickerContent
+            }
+
+            if skill.itemKind == .skill && skill.isDirectory && !skill.isReadOnly && !skill.isRemote {
+                Divider().frame(height: 14)
+
+                let menuTools: [ToolSource] = ToolSource.allCases.filter {
+                    $0.listable && !$0.globalPaths.isEmpty && $0 != .agents
+                }
+
+                Menu {
+                    ForEach(menuTools) { tool in
+                        let isPresent = skill.toolSources.contains(tool)
+                        Button {
+                            do {
+                                if isPresent {
+                                    try skill.uninstall(from: tool)
+                                } else {
+                                    try skill.install(into: tool)
+                                }
+                                NotificationCenter.default.post(name: .customScanPathsChanged, object: nil)
+                            } catch {
+                                installError = error.localizedDescription
+                                showingInstallError = true
+                            }
+                        } label: {
+                            if isPresent {
+                                Label(tool.displayName, systemImage: "checkmark")
+                            } else {
+                                Text(tool.displayName)
+                            }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "arrow.down.circle")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .menuStyle(.borderlessButton)
+                .fixedSize()
+                .help("Install to another tool")
+                .accessibilityLabel("Install to another tool")
+                .alert("Install Error", isPresented: $showingInstallError) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(installError ?? "")
+                }
             }
 
             Divider().frame(height: 14)

@@ -80,8 +80,8 @@ final class SkillScanner {
             AppLogger.scanning.notice("File collection done: \(results.count) skills in \(String(format: "%.2f", elapsed))s")
 
             await MainActor.run { [weak self] in
-                guard let self, self.scanGeneration == generation else { return }
-                self.applyResults(results)
+                guard let self, scanGeneration == generation else { return }
+                applyResults(results)
                 let total = CFAbsoluteTimeGetCurrent() - start
                 AppLogger.scanning.notice("Scan complete: \(results.count) skills applied in \(String(format: "%.2f", total))s")
             }

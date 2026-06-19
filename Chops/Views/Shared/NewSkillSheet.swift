@@ -14,8 +14,8 @@ struct NewSkillSheet: View {
 
     private var itemKind: ItemKind { appState.newItemKind }
 
-    // Skills support a global scope (all tools via ~/.agents/skills/);
-    // agents and rules are always tool-specific.
+    /// Skills support a global scope (all tools via ~/.agents/skills/);
+    /// agents and rules are always tool-specific.
     private var showsScopePicker: Bool { itemKind == .skill }
 
     private var effectiveTool: ToolSource {
