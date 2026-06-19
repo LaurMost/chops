@@ -6,7 +6,7 @@ struct ToolBadge: View {
 
     var body: some View {
         Text(tool.shortLabel)
-            .font(.system(size: 9, weight: .semibold, design: .rounded))
+            .font(.system(size: 10, weight: .semibold, design: .rounded))
             .foregroundStyle(.secondary)
             .padding(.horizontal, 4)
             .padding(.vertical, 2)

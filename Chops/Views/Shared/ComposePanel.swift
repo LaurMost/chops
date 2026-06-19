@@ -423,7 +423,7 @@ struct ComposePanel: View {
                     }
                     .padding(12)
                 }
-                .background(Color(.textBackgroundColor).opacity(0.3))
+                .background(Color(.textBackgroundColor).opacity(0.5))
                 .onChange(of: messages.count) { _, _ in
                     withAnimation { proxy.scrollTo("live-assistant", anchor: .bottom) }
                 }
@@ -495,7 +495,6 @@ struct ComposePanel: View {
                     Text("Agent").foregroundStyle(.secondary)
                     Spacer()
                     elapsedTurnLabel
-                    inlineStopButton
                 }
                 .font(.caption)
                 .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 4)
@@ -608,7 +607,7 @@ struct ComposePanel: View {
                         .textSelection(.enabled)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 7)
-                        .background(Color.accentColor.opacity(0.22))
+                        .background(Color.accentColor.opacity(0.32))
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .frame(maxWidth: bubbleWidth, alignment: .trailing)
                 }

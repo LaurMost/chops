@@ -103,27 +103,60 @@ struct SkillListView: View {
     @ViewBuilder
     private var emptyStateView: some View {
         if let kind = appState.toolKindFilter {
-            ContentUnavailableView(
-                "No \(kind.displayName)",
-                systemImage: kind.icon,
-                description: Text("No \(kind.displayName.lowercased()) match the current filter.")
-            )
+            ContentUnavailableView {
+                Label("No \(kind.displayName)", systemImage: kind.icon)
+            } description: {
+                Text("No \(kind.displayName.lowercased()) match the current filter.")
+            } actions: {
+                Button("New \(kind.singularName)") {
+                    appState.newItemKind = kind
+                    appState.showingNewSkillSheet = true
+                }
+                .buttonStyle(.borderedProminent)
+            }
         } else {
             switch appState.sidebarFilter {
             case .toolsOverview:
                 EmptyView()
             case .allAgents:
-                ContentUnavailableView("No Agents", systemImage: "person.crop.rectangle",
-                                       description: Text("No agents match the current filter."))
+                ContentUnavailableView {
+                    Label("No Agents", systemImage: "person.crop.rectangle")
+                } description: {
+                    Text("Create an agent to get started.")
+                } actions: {
+                    Button("New Agent") {
+                        appState.newItemKind = .agent
+                        appState.showingNewSkillSheet = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             case .allRules:
-                ContentUnavailableView("No Rules", systemImage: "list.bullet.rectangle",
-                                       description: Text("No rules match the current filter."))
+                ContentUnavailableView {
+                    Label("No Rules", systemImage: "list.bullet.rectangle")
+                } description: {
+                    Text("Create a rule to get started.")
+                } actions: {
+                    Button("New Rule") {
+                        appState.newItemKind = .rule
+                        appState.showingNewSkillSheet = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             case .plugins:
                 ContentUnavailableView("No Plugin Skills", systemImage: "puzzlepiece.extension",
                                        description: Text("No plugin skills match the current filter."))
             default:
-                ContentUnavailableView("No Skills", systemImage: "doc.text",
-                                       description: Text("No skills match the current filter."))
+                ContentUnavailableView {
+                    Label("No Skills", systemImage: "doc.text")
+                } description: {
+                    Text("Create a skill to get started.")
+                } actions: {
+                    Button("New Skill") {
+                        appState.newItemKind = .skill
+                        appState.showingNewSkillSheet = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             }
         }
     }
@@ -370,7 +403,7 @@ struct SkillRow: View {
                     .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .frame(maxWidth: 110)
+                    .frame(maxWidth: 80)
                     .padding(.horizontal, 5)
                     .padding(.vertical, 1)
                     .background(.quaternary, in: Capsule())
@@ -401,7 +434,7 @@ struct SkillRow: View {
                 ForEach(skill.toolSources, id: \.self) { tool in
                     ToolIcon(tool: tool, size: 14)
                         .help(tool.displayName)
-                        .opacity(0.6)
+                        .opacity(0.75)
                 }
             }
         }

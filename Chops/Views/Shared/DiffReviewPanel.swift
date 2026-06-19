@@ -138,18 +138,12 @@ struct DiffReviewPanel: View {
             Image(systemName: "plusminus")
                 .foregroundStyle(.secondary)
 
-            Label("+\(addedCount)", systemImage: "")
+            Text("+\(addedCount)")
                 .font(.caption.monospaced())
                 .foregroundStyle(.green)
-            Label("-\(removedCount)", systemImage: "")
+            Text("−\(removedCount)")
                 .font(.caption.monospaced())
                 .foregroundStyle(.red)
-
-            Spacer()
-
-            Text("Review Changes")
-                .font(.caption)
-                .foregroundStyle(.secondary)
 
             Spacer()
 
@@ -161,7 +155,7 @@ struct DiffReviewPanel: View {
             }
 
             if let onAccept {
-                Button(isApplying ? "Applying..." : "Accept", action: onAccept)
+                Button(isApplying ? "Applying…" : "Accept", action: onAccept)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.small)
                     .tint(.green)
@@ -189,7 +183,7 @@ struct DiffReviewPanel: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(.horizontal, 8)
-                    .padding(.vertical, 1)
+                    .padding(.vertical, 2)
                     .background(line.kind.background)
                 }
             }

@@ -50,7 +50,7 @@ final class SkillEditorDocument {
         let fallback = skill.content
         let generation = loadGeneration
 
-        loadTask = Task.detached { [weak self] in
+        loadTask = Task.detached {
             let start = CFAbsoluteTimeGetCurrent()
             let data: String
             if let fileData = try? String(contentsOfFile: path, encoding: .utf8) {
@@ -156,30 +156,26 @@ final class SkillEditorDocument {
 
         isSavingRemote = true
 
-        Task {
+        Task { @MainActor in
             do {
                 try await SSHService.writeFile(server, path: remotePath, content: editorContent)
-                await MainActor.run {
-                    fullFileContent = editorContent
-                    hasUnsavedChanges = false
-                    isSavingRemote = false
+                fullFileContent = editorContent
+                hasUnsavedChanges = false
+                isSavingRemote = false
 
-                    let parsed = FrontmatterParser.parse(editorContent)
-                    if !parsed.name.isEmpty {
-                        skill.name = parsed.name
-                    }
-                    skill.skillDescription = parsed.description
-                    skill.content = parsed.content
-                    skill.frontmatter = parsed.frontmatter
-                    skill.fileModifiedDate = .now
-                    skill.fileSize = editorContent.utf8.count
+                let parsed = FrontmatterParser.parse(editorContent)
+                if !parsed.name.isEmpty {
+                    skill.name = parsed.name
                 }
+                skill.skillDescription = parsed.description
+                skill.content = parsed.content
+                skill.frontmatter = parsed.frontmatter
+                skill.fileModifiedDate = .now
+                skill.fileSize = editorContent.utf8.count
             } catch {
-                await MainActor.run {
-                    saveErrorMessage = error.localizedDescription
-                    showingSaveError = true
-                    isSavingRemote = false
-                }
+                saveErrorMessage = error.localizedDescription
+                showingSaveError = true
+                isSavingRemote = false
             }
         }
     }
