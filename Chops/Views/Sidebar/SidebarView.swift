@@ -130,6 +130,7 @@ struct SidebarView: View {
                             }
                             .buttonStyle(.plain)
                             .help("Sync skills from server")
+                            .accessibilityLabel("Sync \(server.label)")
                             .disabled(syncingServerIDs.contains(server.id))
                         }
                         .badge(server.skills.count)

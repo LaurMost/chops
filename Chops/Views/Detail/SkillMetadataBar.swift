@@ -55,6 +55,8 @@ struct SkillMetadataBar: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
+            .help("Assign to collection")
+            .accessibilityLabel("Assign to collection")
             .popover(isPresented: $showingCollectionPicker) {
                 collectionPickerContent
             }
