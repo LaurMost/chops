@@ -269,49 +269,61 @@ struct SkillListView: View {
                 }
             }
         }
-        .alert(item: $activeAlert) { alert in
-            switch alert {
-            case .confirmMakeGlobal(let skill):
-                return Alert(
-                    title: Text("Make \"\(skill.name)\" Global?"),
-                    message: Text("This will move the skill to ~/.agents/skills/ and symlink it to all installed agents."),
-                    primaryButton: .default(Text("Make Global")) {
-                        makeSkillGlobal(skill)
-                    },
-                    secondaryButton: .cancel()
-                )
-            case .confirmDelete(let skill):
-                return Alert(
-                    title: Text("Delete \(skill.displayTypeName)?"),
-                    message: Text("This will permanently delete \"\(skill.name)\" from disk."),
-                    primaryButton: .destructive(Text("Delete")) {
-                        deleteSkill(skill)
-                    },
-                    secondaryButton: .cancel()
-                )
-            case .deleteError(let message):
-                return Alert(
-                    title: Text("Delete Failed"),
-                    message: Text(message),
-                    dismissButton: .default(Text("OK"))
-                )
-            case .makeGlobalError(let message):
-                return Alert(
-                    title: Text("Make Global Failed"),
-                    message: Text(message),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-        }
+        .alert(
+            activeAlert.map(alertTitle) ?? "",
+            isPresented: Binding(
+                get: { activeAlert != nil },
+                set: { if !$0 { activeAlert = nil } }
+            ),
+            presenting: activeAlert,
+            actions: alertActions,
+            message: alertMessage
+        )
         .overlay {
             if filteredSkills.isEmpty { emptyStateView }
         }
         .onChange(of: appState.sidebarFilter) {
-            if let selected = appState.selectedSkill, filteredSkills.contains(selected) {
-                // Already selected something valid in this filter
-            } else {
+            let selectionStillValid = appState.selectedSkill.map(filteredSkills.contains) ?? false
+            if !selectionStillValid {
                 appState.selectedSkill = filteredSkills.first
             }
+        }
+    }
+
+    // MARK: - Alerts
+
+    private func alertTitle(_ alert: ActiveAlert) -> String {
+        switch alert {
+        case .confirmMakeGlobal(let skill): "Make \"\(skill.name)\" Global?"
+        case .confirmDelete(let skill): "Delete \(skill.displayTypeName)?"
+        case .deleteError: "Delete Failed"
+        case .makeGlobalError: "Make Global Failed"
+        }
+    }
+
+    @ViewBuilder
+    private func alertActions(for alert: ActiveAlert) -> some View {
+        switch alert {
+        case .confirmMakeGlobal(let skill):
+            Button("Make Global") { makeSkillGlobal(skill) }
+            Button("Cancel", role: .cancel) {}
+        case .confirmDelete(let skill):
+            Button("Delete", role: .destructive) { deleteSkill(skill) }
+            Button("Cancel", role: .cancel) {}
+        case .deleteError, .makeGlobalError:
+            Button("OK") {}
+        }
+    }
+
+    @ViewBuilder
+    private func alertMessage(for alert: ActiveAlert) -> some View {
+        switch alert {
+        case .confirmMakeGlobal:
+            Text("This will move the skill to ~/.agents/skills/ and symlink it to all installed agents.")
+        case .confirmDelete(let skill):
+            Text("This will permanently delete \"\(skill.name)\" from disk.")
+        case .deleteError(let message), .makeGlobalError(let message):
+            Text(message)
         }
     }
 }
