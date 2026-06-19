@@ -108,7 +108,7 @@ site/                # Marketing website (Astro 6)
 
 - **No sandbox.** The app needs unrestricted filesystem access to read dotfiles across `~/`. This is intentional and required for core functionality. The entitlements file explicitly disables the app sandbox.
 - **Dedup via symlinks.** Skills are uniquely identified by their resolved symlink path. If the same file is symlinked into multiple tool directories, it shows up as one skill with multiple tool badges.
-- **No test suite.** Validate changes manually — build, run, trigger the feature you changed, observe the result.
+- **Tested where it counts.** A `ChopsTests` XCTest target covers the pure, logic-heavy code (parsers, `ToolSource`, agent response parsing). UI behavior is validated manually — build, run, trigger the feature you changed, observe the result.
 
 ### State management
 
@@ -159,7 +159,13 @@ Views are in `Chops/Views/`, organized by column (Sidebar, Detail) and shared co
 
 ## Testing
 
-No automated test suite. Validate manually:
+The `ChopsTests` XCTest target covers the pure, logic-heavy code (parsers, `ToolSource`, agent response parsing, plugin-origin helpers) and runs in CI on every push and PR:
+
+```bash
+xcodebuild -scheme Chops -configuration Debug -destination 'platform=macOS' test
+```
+
+UI behavior has no automated coverage, so always also validate manually:
 
 1. Build and run the app (Cmd+R)
 2. Trigger the exact feature you changed
@@ -179,7 +185,13 @@ npm run build    # production build → site/dist/
 
 ## AI Agent Setup
 
-This repo includes a Claude Code skill at `.claude/skills/setup.md` that gives AI coding agents full context on the project — architecture, key files, and common tasks. If you're using Claude Code, it'll pick this up automatically.
+This repo includes a Claude Code skill at `.claude/skills/setup/SKILL.md` that gives AI coding agents full context on the project — architecture, key files, and common tasks. If you're using Claude Code, it'll pick this up automatically.
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for dev setup, branch naming, commit/PR conventions, and the local checks CI runs. Please also read our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+Found a security issue? See [SECURITY.md](SECURITY.md) for how to report it privately.
 
 ## License
 
