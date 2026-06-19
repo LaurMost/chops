@@ -13,6 +13,7 @@ struct ScannedSkillData {
     let skillDescription: String
     let content: String
     let frontmatter: [String: String]
+    let metadata: [String: String]
     let modDate: Date
     let fileSize: Int
     let kind: ItemKind
@@ -394,6 +395,15 @@ final class SkillScanner {
         let modDate = (attrs?[.modificationDate] as? Date) ?? .now
         let fileSize = (attrs?[.size] as? Int) ?? 0
 
+        // Lenient discovery: a real SKILL.md with no description is not a usable
+        // skill, so skip and log it. Other formats (rules, agents, heading-format
+        // Codex files) may legitimately have no description — never drop those.
+        if fileURL.lastPathComponent == "SKILL.md",
+           parsed.description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            AppLogger.scanning.warning("Skipping SKILL.md with empty description: \(fileURL.path)")
+            return nil
+        }
+
         let name: String
         if !parsed.name.isEmpty {
             name = parsed.name
@@ -413,6 +423,7 @@ final class SkillScanner {
             skillDescription: parsed.description,
             content: parsed.content,
             frontmatter: parsed.frontmatter,
+            metadata: parsed.metadata,
             modDate: modDate,
             fileSize: fileSize,
             kind: kind
@@ -585,7 +596,7 @@ final class SkillScanner {
                 existing.name = preferredData.name
                 existing.skillDescription = preferredData.skillDescription
                 existing.content = preferredData.content
-                existing.frontmatter = preferredData.frontmatter
+                existing.setFrontmatter(scalars: preferredData.frontmatter, metadata: preferredData.metadata)
                 existing.fileModifiedDate = preferredData.modDate
                 existing.fileSize = preferredData.fileSize
                 existing.isGlobal = preferredData.isGlobal
@@ -601,6 +612,7 @@ final class SkillScanner {
                     skillDescription: primary.skillDescription,
                     content: primary.content,
                     frontmatter: primary.frontmatter,
+                    metadata: primary.metadata,
                     fileModifiedDate: primary.modDate,
                     fileSize: primary.fileSize,
                     isGlobal: primary.isGlobal,
@@ -665,7 +677,7 @@ final class SkillScanner {
                     existing.content = parsed.content
                     existing.name = name
                     existing.skillDescription = parsed.description
-                    existing.frontmatter = parsed.frontmatter
+                    existing.setFrontmatter(scalars: parsed.frontmatter, metadata: parsed.metadata)
                 } else {
                     let skill = Skill(
                         filePath: resolvedPath,
@@ -675,6 +687,7 @@ final class SkillScanner {
                         skillDescription: parsed.description,
                         content: parsed.content,
                         frontmatter: parsed.frontmatter,
+                        metadata: parsed.metadata,
                         isGlobal: true,
                         resolvedPath: resolvedPath
                     )

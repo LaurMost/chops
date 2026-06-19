@@ -1,10 +1,17 @@
 import SwiftData
 import SwiftUI
+import Yams
 
 struct NewSkillSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(AppState.self) private var appState
+
+    private struct MetadataRow: Identifiable {
+        let id = UUID()
+        var key = ""
+        var value = ""
+    }
 
     @State private var skillName = ""
     @State private var skillDescription = ""
@@ -12,7 +19,16 @@ struct NewSkillSheet: View {
     @State private var selectedTool: ToolSource = .claude
     @State private var filesystemError: String?
 
+    // Advanced metadata (skills only).
+    @State private var license = ""
+    @State private var compatibility = ""
+    @State private var allowedTools = ""
+    @State private var metadataRows: [MetadataRow] = []
+    @State private var scaffoldDirectories = false
+
     private var itemKind: ItemKind { appState.newItemKind }
+
+    private var showsAdvancedMetadata: Bool { itemKind == .skill }
 
     /// Skills support a global scope (all tools via ~/.agents/skills/);
     /// agents and rules are always tool-specific.
@@ -33,11 +49,41 @@ struct NewSkillSheet: View {
         }
     }
 
+    /// Produces a spec-valid identifier: lowercase ASCII alphanumerics with
+    /// single hyphens, no leading/trailing/consecutive hyphens, capped at 64.
+    /// `My  Skill!!` → `my-skill`.
     private var sanitizedID: String {
-        skillName
-            .lowercased()
-            .replacingOccurrences(of: " ", with: "-")
-            .filter { $0.isLetter || $0.isNumber || $0 == "-" }
+        Self.sanitize(skillName)
+    }
+
+    static func sanitize(_ raw: String) -> String {
+        let mapped = raw.lowercased().map { character -> Character in
+            (character.isASCII && (character.isLetter || character.isNumber)) ? character : "-"
+        }
+        var result = String(mapped)
+        while result.contains("--") {
+            result = result.replacingOccurrences(of: "--", with: "-")
+        }
+        result = result.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+        if result.count > SkillSpecValidator.maxNameLength {
+            result = String(result.prefix(SkillSpecValidator.maxNameLength))
+            result = result.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+        }
+        return result
+    }
+
+    private var validationIssues: [ValidationIssue] {
+        SkillSpecValidator.validateForAuthoring(
+            SkillSpecValidator.Input(
+                name: sanitizedID,
+                description: skillDescription,
+                compatibility: compatibility.isEmpty ? nil : compatibility
+            )
+        )
+    }
+
+    private func issueMessage(for field: String) -> String? {
+        validationIssues.first { $0.field == field }?.message
     }
 
     private var filenamePreview: String {
@@ -60,9 +106,7 @@ struct NewSkillSheet: View {
     }
 
     private var canCreate: Bool {
-        !skillName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-            !skillDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-            !sanitizedID.isEmpty
+        !validationIssues.contains { $0.severity == .error }
     }
 
     var body: some View {
@@ -76,6 +120,9 @@ struct NewSkillSheet: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+                    if !skillName.isEmpty, let message = issueMessage(for: "name") {
+                        validationLabel(message)
+                    }
                 }
 
                 Section {
@@ -86,6 +133,13 @@ struct NewSkillSheet: View {
                     )
                     .textFieldStyle(.plain)
                     .lineLimit(2 ... 4)
+                    if !skillDescription.isEmpty, let message = issueMessage(for: "description") {
+                        validationLabel(message)
+                    }
+                }
+
+                if showsAdvancedMetadata {
+                    advancedMetadataSection
                 }
 
                 Section {
@@ -139,6 +193,63 @@ struct NewSkillSheet: View {
         }
     }
 
+    private func validationLabel(_ message: String) -> some View {
+        Label(message, systemImage: "exclamationmark.triangle")
+            .font(.caption)
+            .foregroundStyle(.orange)
+    }
+
+    @ViewBuilder
+    private var advancedMetadataSection: some View {
+        Section {
+            DisclosureGroup("Advanced metadata") {
+                TextField("License", text: $license, prompt: Text("MIT"))
+                TextField("Compatibility", text: $compatibility, prompt: Text("Requires network access"))
+                TextField("Allowed tools", text: $allowedTools, prompt: Text("Bash(git:*) Read"))
+
+                if !compatibility.isEmpty, let message = issueMessage(for: "compatibility") {
+                    validationLabel(message)
+                }
+
+                LabeledContent("Metadata") {
+                    Button {
+                        metadataRows.append(MetadataRow())
+                    } label: {
+                        Label("Add", systemImage: "plus")
+                    }
+                    .buttonStyle(.borderless)
+                }
+
+                ForEach($metadataRows) { $row in
+                    HStack(spacing: Spacing.sm) {
+                        TextField("key", text: $row.key)
+                        TextField("value", text: $row.value)
+                        Button {
+                            metadataRows.removeAll { $0.id == row.id }
+                        } label: {
+                            Image(systemName: "minus.circle")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel("Remove metadata row")
+                    }
+                }
+
+                Toggle("Create scripts/, references/, assets/ folders", isOn: $scaffoldDirectories)
+            }
+        }
+    }
+
+    private var metadataDictionary: [String: String] {
+        var result: [String: String] = [:]
+        for row in metadataRows {
+            let key = row.key.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !key.isEmpty else { continue }
+            result[key] = row.value
+        }
+        return result
+    }
+
     private func createItem() {
         let fm = FileManager.default
         guard !sanitizedID.isEmpty else { return }
@@ -185,6 +296,12 @@ struct NewSkillSheet: View {
             let boilerplate = generateBoilerplate(name: skillName, skillID: sanitizedID, description: skillDescription, tool: effectiveTool)
             try boilerplate.write(toFile: filePath, atomically: true, encoding: .utf8)
 
+            if itemKind == .skill, scaffoldDirectories {
+                for subdir in ["scripts", "references", "assets"] {
+                    try fm.createDirectory(atPath: "\(basePath)/\(subdir)", withIntermediateDirectories: true)
+                }
+            }
+
             if itemKind == .skill && effectiveTool == .agents {
                 for agent in AgentTarget.installed {
                     let agentDir = "\(agent.expandedSkillsDir)/\(sanitizedID)"
@@ -207,6 +324,7 @@ struct NewSkillSheet: View {
                 skillDescription: parsed.description,
                 content: parsed.content,
                 frontmatter: parsed.frontmatter,
+                metadata: parsed.metadata,
                 fileModifiedDate: .now,
                 fileSize: boilerplate.count,
                 isGlobal: true,
@@ -253,14 +371,11 @@ struct NewSkillSheet: View {
             Add your rule content here.
             """
         case .skill:
+            let frontmatter = skillFrontmatterYAML(skillID: skillID, description: description)
             switch tool {
             case .claude, .cursor, .agents:
                 return """
-                ---
-                name: \(skillID)
-                description: \(description)
-                ---
-
+                \(frontmatter)
                 # \(name)
 
                 ## When to Use
@@ -273,11 +388,7 @@ struct NewSkillSheet: View {
                 """
             default:
                 return """
-                ---
-                name: \(skillID)
-                description: \(description)
-                ---
-
+                \(frontmatter)
                 # \(name)
 
                 ## Instructions
@@ -287,4 +398,56 @@ struct NewSkillSheet: View {
             }
         }
     }
+
+    /// Builds the `---` delimited frontmatter block for a new skill, emitting
+    /// only the fields the user filled in. Yams handles quoting/escaping.
+    private func skillFrontmatterYAML(skillID: String, description: String) -> String {
+        let document = SkillFrontmatterDocument(
+            name: skillID,
+            description: description,
+            license: license.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty,
+            compatibility: compatibility.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty,
+            allowedTools: allowedTools.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty,
+            metadata: metadataDictionary.isEmpty ? nil : metadataDictionary
+        )
+
+        let body = (try? YAMLEncoder().encode(document)) ?? "name: \(skillID)\ndescription: \(description)\n"
+        return "---\n\(body)---\n"
+    }
+}
+
+/// Ordered Encodable used to emit a new skill's frontmatter with only the
+/// populated fields, in spec field order.
+private struct SkillFrontmatterDocument: Encodable {
+    var name: String
+    var description: String
+    var license: String?
+    var compatibility: String?
+    var allowedTools: String?
+    var metadata: [String: String]?
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case description
+        case license
+        case compatibility
+        case allowedTools = "allowed-tools"
+        case metadata
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(description, forKey: .description)
+        try container.encodeIfPresent(license, forKey: .license)
+        try container.encodeIfPresent(compatibility, forKey: .compatibility)
+        try container.encodeIfPresent(allowedTools, forKey: .allowedTools)
+        if let metadata, !metadata.isEmpty {
+            try container.encode(metadata, forKey: .metadata)
+        }
+    }
+}
+
+private extension String {
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }

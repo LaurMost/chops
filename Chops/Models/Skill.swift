@@ -1,6 +1,29 @@
 import Foundation
 import SwiftData
 
+/// Codable payload persisted in `Skill.frontmatterData`. Holds the flat
+/// top-level scalar keys plus the nested `metadata:` map from the Agent Skills
+/// spec. Typed spec fields (`license`, `compatibility`, `allowed-tools`) are
+/// derived from `scalars` so there is a single source of truth.
+struct SkillFrontmatter: Codable, Equatable {
+    var scalars: [String: String]
+    var metadata: [String: String]
+
+    init(scalars: [String: String] = [:], metadata: [String: String] = [:]) {
+        self.scalars = scalars
+        self.metadata = metadata
+    }
+
+    var license: String? { nonEmpty(scalars["license"]) }
+    var compatibility: String? { nonEmpty(scalars["compatibility"]) }
+    var allowedTools: String? { nonEmpty(scalars["allowed-tools"]) }
+
+    private func nonEmpty(_ value: String?) -> String? {
+        guard let value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
+        return value
+    }
+}
+
 enum ItemKind: String, Codable, CaseIterable {
     case skill
     case agent
@@ -136,10 +159,14 @@ extension Skill {
         }
     }
 
-    var frontmatter: [String: String] {
+    /// Decoded frontmatter blob. Old `[String: String]` blobs (pre-spec) fail to
+    /// decode here and surface as defaults until the next scan repopulates them.
+    private var storedFrontmatter: SkillFrontmatter {
         get {
-            guard let data = frontmatterData else { return [:] }
-            return (try? JSONDecoder().decode([String: String].self, from: data)) ?? [:]
+            guard let data = frontmatterData,
+                  let decoded = try? JSONDecoder().decode(SkillFrontmatter.self, from: data)
+            else { return SkillFrontmatter() }
+            return decoded
         }
         set {
             do {
@@ -148,6 +175,64 @@ extension Skill {
                 AppLogger.fileIO.fault("Failed to encode frontmatter: \(error.localizedDescription)")
             }
         }
+    }
+
+    /// Flat top-level scalar frontmatter keys (the historical contract).
+    var frontmatter: [String: String] {
+        get { storedFrontmatter.scalars }
+        set {
+            var fm = storedFrontmatter
+            fm.scalars = newValue
+            storedFrontmatter = fm
+        }
+    }
+
+    /// Nested `metadata:` map from the spec (author, version, etc.).
+    var metadata: [String: String] {
+        get { storedFrontmatter.metadata }
+        set {
+            var fm = storedFrontmatter
+            fm.metadata = newValue
+            storedFrontmatter = fm
+        }
+    }
+
+    var license: String? { storedFrontmatter.license }
+    var compatibility: String? { storedFrontmatter.compatibility }
+    var allowedTools: String? { storedFrontmatter.allowedTools }
+
+    /// Non-blocking spec issues derived from the current name/description/path.
+    /// Only applies to directory-backed Agent Skill `SKILL.md` files; rules,
+    /// agents, and heading-format files follow different conventions.
+    var specValidationIssues: [ValidationIssue] {
+        guard itemKind == .skill, !isRemote,
+              URL(fileURLWithPath: filePath).lastPathComponent == "SKILL.md"
+        else { return [] }
+        let directoryName = isDirectory
+            ? URL(fileURLWithPath: filePath).deletingLastPathComponent().lastPathComponent
+            : nil
+        return SkillSpecValidator.validateDiscovered(
+            SkillSpecValidator.Input(
+                name: name,
+                description: skillDescription,
+                compatibility: compatibility,
+                directoryName: directoryName
+            )
+        )
+    }
+
+    /// Single mutation point for applying a freshly parsed skill file onto the
+    /// model. Keeps name/description/content/frontmatter/metadata in sync.
+    func apply(_ parsed: ParsedSkill) {
+        if !parsed.name.isEmpty { name = parsed.name }
+        skillDescription = parsed.description
+        content = parsed.content
+        storedFrontmatter = SkillFrontmatter(scalars: parsed.frontmatter, metadata: parsed.metadata)
+    }
+
+    /// Replace both flat scalars and the nested metadata map in one write.
+    func setFrontmatter(scalars: [String: String], metadata: [String: String]) {
+        storedFrontmatter = SkillFrontmatter(scalars: scalars, metadata: metadata)
     }
 
     /// How many tools this skill is installed for
