@@ -128,6 +128,10 @@ struct SkillDetailView: View {
         .navigationTitle(skill.name)
         .onAppear {
             document.load(from: skill)
+            if appState.openComposeAfterCreate && !skill.isReadOnly {
+                appState.openComposeAfterCreate = false
+                showingComposePanel = true
+            }
         }
         .onChange(of: skill.filePath) {
             autoSaveTask?.cancel()

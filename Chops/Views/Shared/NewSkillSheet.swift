@@ -5,16 +5,27 @@ struct NewSkillSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(AppState.self) private var appState
+
     @State private var skillName = ""
-    @State private var selectedTool: ToolSource = .agents
-    @State private var errorMessage: String?
+    @State private var skillDescription = ""
+    @State private var isGlobalScope = true
+    @State private var selectedTool: ToolSource = .claude
+    @State private var filesystemError: String?
 
     private var itemKind: ItemKind { appState.newItemKind }
+
+    // Skills support a global scope (all tools via ~/.agents/skills/);
+    // agents and rules are always tool-specific.
+    private var showsScopePicker: Bool { itemKind == .skill }
+
+    private var effectiveTool: ToolSource {
+        (showsScopePicker && isGlobalScope) ? .agents : selectedTool
+    }
 
     private var creatableTools: [ToolSource] {
         switch itemKind {
         case .skill:
-            return [.agents, .amp, .antigravity, .claude, .codex, .cursor, .opencode, .pi]
+            return [.amp, .antigravity, .claude, .codex, .cursor, .opencode, .pi]
         case .agent:
             return ToolSource.allCases.filter { !$0.globalAgentPaths.isEmpty }
         case .rule:
@@ -22,50 +33,106 @@ struct NewSkillSheet: View {
         }
     }
 
+    private var sanitizedID: String {
+        skillName
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "-")
+            .filter { $0.isLetter || $0.isNumber || $0 == "-" }
+    }
+
+    private var filenamePreview: String {
+        guard !sanitizedID.isEmpty else { return "" }
+        let homeDir = FileManager.default.homeDirectoryForCurrentUser.path
+        func abbreviated(_ path: String) -> String {
+            path.replacingOccurrences(of: homeDir, with: "~")
+        }
+        switch itemKind {
+        case .skill:
+            guard let dir = effectiveTool.globalPaths.first else { return "" }
+            return "\(abbreviated(dir))/\(sanitizedID)/SKILL.md"
+        case .agent:
+            guard let dir = selectedTool.globalAgentPaths.first else { return "" }
+            return "\(abbreviated(dir))/\(sanitizedID)/\(sanitizedID).md"
+        case .rule:
+            guard let dir = selectedTool.globalRulePaths.first else { return "" }
+            return "\(abbreviated(dir))/\(sanitizedID).md"
+        }
+    }
+
+    private var canCreate: Bool {
+        !skillName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+            !skillDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+            !sanitizedID.isEmpty
+    }
+
     var body: some View {
-        VStack(spacing: 20) {
-            Text("New \(itemKind.singularName)")
-                .font(.title2)
-                .fontWeight(.bold)
-
+        NavigationStack {
             Form {
-                TextField("\(itemKind.singularName) name", text: $skillName)
-                    .textFieldStyle(.roundedBorder)
+                Section {
+                    TextField("Name", text: $skillName)
+                        .textFieldStyle(.plain)
+                    if !sanitizedID.isEmpty {
+                        Text(filenamePreview)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
-                Picker("Tool", selection: $selectedTool) {
-                    ForEach(creatableTools) { tool in
-                        Label(tool.displayName, systemImage: tool.iconName)
-                            .tag(tool)
+                Section {
+                    TextField(
+                        "What does this \(itemKind.singularName.lowercased()) do? When should it activate?",
+                        text: $skillDescription,
+                        axis: .vertical
+                    )
+                    .textFieldStyle(.plain)
+                    .lineLimit(2 ... 4)
+                }
+
+                Section {
+                    if showsScopePicker {
+                        Picker("Scope", selection: $isGlobalScope) {
+                            Text("Global — all tools").tag(true)
+                            Text("Tool-specific").tag(false)
+                        }
+                    }
+                    if !isGlobalScope || !showsScopePicker {
+                        Picker("Tool", selection: $selectedTool) {
+                            ForEach(creatableTools) { tool in
+                                Label(tool.displayName, systemImage: tool.iconName)
+                                    .tag(tool)
+                            }
+                        }
+                    }
+                } footer: {
+                    if showsScopePicker && isGlobalScope {
+                        Text("Installed in ~/.agents/skills/ and symlinked to each of your installed tools. To add a project-local skill, place a file directly in your project's tool directory.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
             .formStyle(.grouped)
-
-            if let error = errorMessage {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+            .navigationTitle("New \(itemKind.singularName)")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Create") { createItem() }
+                        .disabled(!canCreate)
+                }
             }
-
-            HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .keyboardShortcut(.cancelAction)
-
-                Spacer()
-
-                Button("Create") {
-                    createItem()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(skillName.isEmpty)
+            .alert("Creation Failed", isPresented: Binding(
+                get: { filesystemError != nil },
+                set: { if !$0 { filesystemError = nil } }
+            )) {
+                Button("OK") { filesystemError = nil }
+            } message: {
+                Text(filesystemError ?? "")
             }
         }
-        .padding(24)
-        .frame(width: 400)
+        .frame(minWidth: 400, idealWidth: 440)
         .onAppear {
-            // Ensure selectedTool is valid for the current item kind
             if !creatableTools.contains(selectedTool) {
                 selectedTool = creatableTools.first ?? .claude
             }
@@ -74,15 +141,7 @@ struct NewSkillSheet: View {
 
     private func createItem() {
         let fm = FileManager.default
-        let sanitizedName = skillName
-            .lowercased()
-            .replacingOccurrences(of: " ", with: "-")
-            .filter { $0.isLetter || $0.isNumber || $0 == "-" }
-
-        guard !sanitizedName.isEmpty else {
-            errorMessage = "Invalid name"
-            return
-        }
+        guard !sanitizedID.isEmpty else { return }
 
         let basePath: String
         let fileName: String
@@ -90,24 +149,24 @@ struct NewSkillSheet: View {
         switch itemKind {
         case .agent:
             guard let dir = selectedTool.globalAgentPaths.first else {
-                errorMessage = "This tool doesn't support agents"
+                filesystemError = "\(selectedTool.displayName) doesn't support agents"
                 return
             }
-            basePath = "\(dir)/\(sanitizedName)"
-            fileName = "\(sanitizedName).md"
+            basePath = "\(dir)/\(sanitizedID)"
+            fileName = "\(sanitizedID).md"
         case .rule:
             guard let dir = selectedTool.globalRulePaths.first else {
-                errorMessage = "This tool doesn't support rules"
+                filesystemError = "\(selectedTool.displayName) doesn't support rules"
                 return
             }
             basePath = dir
-            fileName = "\(sanitizedName).md"
+            fileName = "\(sanitizedID).md"
         case .skill:
-            guard let dir = selectedTool.globalPaths.first else {
-                errorMessage = "This tool doesn't support skills"
+            guard let dir = effectiveTool.globalPaths.first else {
+                filesystemError = "\(effectiveTool.displayName) doesn't support skills"
                 return
             }
-            basePath = "\(dir)/\(sanitizedName)"
+            basePath = "\(dir)/\(sanitizedID)"
             fileName = "SKILL.md"
         }
 
@@ -116,20 +175,19 @@ struct NewSkillSheet: View {
 
             let filePath = "\(basePath)/\(fileName)"
             var installedPaths = [filePath]
-            var toolSources = [selectedTool]
+            var toolSources = [effectiveTool]
 
             guard !fm.fileExists(atPath: filePath) else {
-                errorMessage = "A \(itemKind.singularName.lowercased()) with this name already exists"
+                filesystemError = "A \(itemKind.singularName.lowercased()) named \"\(sanitizedID)\" already exists"
                 return
             }
 
-            let boilerplate = generateBoilerplate(name: skillName, skillID: sanitizedName, tool: selectedTool)
+            let boilerplate = generateBoilerplate(name: skillName, skillID: sanitizedID, description: skillDescription, tool: effectiveTool)
             try boilerplate.write(toFile: filePath, atomically: true, encoding: .utf8)
 
-            // When creating a Global skill, symlink from each installed agent's skills dir
-            if itemKind == .skill && selectedTool == .agents {
+            if itemKind == .skill && effectiveTool == .agents {
                 for agent in AgentTarget.installed {
-                    let agentDir = "\(agent.expandedSkillsDir)/\(sanitizedName)"
+                    let agentDir = "\(agent.expandedSkillsDir)/\(sanitizedID)"
                     guard !fm.fileExists(atPath: agentDir) else { continue }
                     try fm.createDirectory(atPath: agent.expandedSkillsDir, withIntermediateDirectories: true)
                     try fm.createSymbolicLink(atPath: agentDir, withDestinationPath: basePath)
@@ -143,7 +201,7 @@ struct NewSkillSheet: View {
             let parsed = FrontmatterParser.parse(boilerplate)
             let skill = Skill(
                 filePath: filePath,
-                toolSource: selectedTool,
+                toolSource: effectiveTool,
                 isDirectory: itemKind != .rule,
                 name: skillName,
                 skillDescription: parsed.description,
@@ -166,19 +224,20 @@ struct NewSkillSheet: View {
             case .rule: appState.sidebarFilter = .allRules
             }
             appState.selectedSkill = skill
+            appState.openComposeAfterCreate = true
             dismiss()
         } catch {
-            errorMessage = error.localizedDescription
+            filesystemError = error.localizedDescription
         }
     }
 
-    private func generateBoilerplate(name: String, skillID: String, tool: ToolSource) -> String {
+    private func generateBoilerplate(name: String, skillID: String, description: String, tool: ToolSource) -> String {
         switch itemKind {
         case .agent:
             return """
             ---
             name: \(skillID)
-            description: \(name)
+            description: \(description)
             ---
 
             # \(name)
@@ -199,7 +258,7 @@ struct NewSkillSheet: View {
                 return """
                 ---
                 name: \(skillID)
-                description: \(name)
+                description: \(description)
                 ---
 
                 # \(name)
@@ -216,7 +275,7 @@ struct NewSkillSheet: View {
                 return """
                 ---
                 name: \(skillID)
-                description: \(name)
+                description: \(description)
                 ---
 
                 # \(name)

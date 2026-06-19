@@ -73,13 +73,13 @@ final class SkillScanner {
         let generation = scanGeneration
         let customPaths = UserDefaults.standard.stringArray(forKey: "customScanPaths") ?? []
         let pluginTools = ChopsSettings.enabledPluginTools
-        scanTask = Task.detached { [weak self] in
+        scanTask = Task.detached {
             let results = Self.collectAllSkills(customPaths: customPaths, pluginTools: pluginTools)
             guard !Task.isCancelled else { return }
             let elapsed = CFAbsoluteTimeGetCurrent() - start
             AppLogger.scanning.notice("File collection done: \(results.count) skills in \(String(format: "%.2f", elapsed))s")
 
-            await MainActor.run {
+            await MainActor.run { [weak self] in
                 guard let self, self.scanGeneration == generation else { return }
                 self.applyResults(results)
                 let total = CFAbsoluteTimeGetCurrent() - start

@@ -11,6 +11,8 @@ final class AppState {
     var sidebarFilter: SidebarFilter = .allSkills
     /// Filter by item kind within a tool view (nil = show all)
     var toolKindFilter: ItemKind?
+    /// Set to true by NewSkillSheet after creating a skill; consumed once by SkillDetailView to auto-open compose.
+    var openComposeAfterCreate = false
 }
 
 enum SidebarFilter: Hashable {

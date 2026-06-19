@@ -8,7 +8,8 @@ struct SkillMetadataBar: View {
     @State private var showingCollectionPicker = false
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
+            // Tool icons — clicking shows installed paths
             HStack(spacing: 6) {
                 ForEach(skill.toolSources) { tool in
                     ToolIcon(tool: tool, size: 14)
@@ -16,7 +17,7 @@ struct SkillMetadataBar: View {
             }
             .help(installedPathsSummary)
 
-            Divider().frame(height: 16)
+            Divider().frame(height: 14)
 
             if skill.isRemote, let server = skill.remoteServer {
                 Label {
@@ -27,7 +28,7 @@ struct SkillMetadataBar: View {
                 .font(.caption)
                 .foregroundStyle(.indigo)
 
-                Divider().frame(height: 16)
+                Divider().frame(height: 14)
             }
 
             Text(skill.isRemote ? (skill.remotePath ?? "") : displayPath)
@@ -37,13 +38,15 @@ struct SkillMetadataBar: View {
                 .truncationMode(.middle)
                 .help(skill.isRemote ? (skill.remotePath ?? "") : installedPathsSummary)
 
-            Divider().frame(height: 16)
+            Text("·")
+                .font(.caption)
+                .foregroundStyle(.quaternary)
 
             Text(formattedSize)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            Divider().frame(height: 16)
+            Spacer()
 
             Button {
                 showingCollectionPicker.toggle()
@@ -53,11 +56,12 @@ struct SkillMetadataBar: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
+            .help("Assign to collection")
             .popover(isPresented: $showingCollectionPicker) {
                 collectionPickerContent
             }
 
-            Spacer()
+            Divider().frame(height: 14)
 
             Text(skill.fileModifiedDate.formatted(.relative(presentation: .named)))
                 .font(.caption)
@@ -99,8 +103,10 @@ struct SkillMetadataBar: View {
     }
 
     private var collectionPickerContent: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Collections").font(.headline).padding(.bottom, 4)
+        VStack(alignment: .leading, spacing: 2) {
+            Text("Collections")
+                .font(.headline)
+                .padding(.bottom, 6)
             ForEach(allCollections) { collection in
                 let isAssigned = skill.collections.contains(where: { $0.name == collection.name })
                 Button {
@@ -119,6 +125,9 @@ struct SkillMetadataBar: View {
                             Image(systemName: "checkmark")
                         }
                     }
+                    .contentShape(Rectangle())
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 4)
                 }
                 .buttonStyle(.plain)
             }
@@ -126,6 +135,7 @@ struct SkillMetadataBar: View {
                 Text("No collections yet")
                     .foregroundStyle(.secondary)
                     .font(.caption)
+                    .padding(.vertical, 4)
             }
         }
         .padding()
